@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  desafiodev-webapi:
+    image: desafiodev-webapi
+    build:
+      context: .
+      dockerfile: DesafioDev.WebAPI/Dockerfile
+    environment:
+      TZ: America/Sao_Paulo
+      ASPNETCORE_ENVIRONMENT: Production
+    ports:
+      - 44352:80
+    networks:
+      - desafiodev-network
+networks:
+  desafiodev-network:
+    driver: bridge
