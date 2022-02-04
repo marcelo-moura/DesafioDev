@@ -5,7 +5,7 @@ services:
     image: desafiodev-webapi
     build:
       context: .
-      dockerfile: DesafioDev.WebAPI/Dockerfile
+      dockerfile: Dockerfile
     environment:
       TZ: America/Sao_Paulo
       ASPNETCORE_ENVIRONMENT: Production
