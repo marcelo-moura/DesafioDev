@@ -15,7 +15,7 @@ deploy:
   provider: script
   script:
     docker tag desafiodev-webapi:latest $DOCKER_USERNAME/desafiodev-webapi:$TRAVIS_JOB_ID;
-	docker push $DOCKER_USERNAME/desafiodev-webapi:$TRAVIS_JOB_ID;
+    docker push $DOCKER_USERNAME/desafiodev-webapi:$TRAVIS_JOB_ID;
   on:
     branch: master
 notifications:
