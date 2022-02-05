@@ -1,0 +1,22 @@
+sudo: required
+dist: bionic
+language: csharp
+mono: none
+dotnet: 6.0
+services: docker
+before_install:
+  - cd DesafioDev/
+  - echo "Estamos na pasta certa!"
+script:
+  - docker-compose build
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+deploy:
+  provider: script
+  script:
+    docker tag desafiodev-webapi:latest $DOCKER_USERNAME/desafiodev-webapi:$TRAVIS_JOB_ID;
+	docker push $DOCKER_USERNAME/desafiodev-webapi:$TRAVIS_JOB_ID;
+  on:
+    branch: master
+notifications:
+  email: false
