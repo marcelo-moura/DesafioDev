@@ -1,0 +1,42 @@
+name: CI com GitHub Actions
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+        - uses: actions/checkout@v2
+        
+        - name: Docker Login - Azure Container Registry
+          uses: Azure/docker-login@v1
+          with:
+            username: ${{ serets.DOCKER_USERNAME}}
+            password: ${{ serets.DOCKER_PASSWORD}}
+            login-server: ${{ serets.DOCKER_CONTAINER_REGISTRY}}
+        
+        - name: Build Images
+          working-directory: ./DesafioDev/DesafioDev
+          run: docker-compose build
+          
+        - name: Push para Azure Container Registry
+          run: docker tag ${{ secrets.IMAGE_NAME }}:latest ${{ secrets.DOCKER_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{github.run_id}}
+               docker push ${{ secrets.DOCKER_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{github.run_id}}
+               
+        - name: Login na Azure para Deployment
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+            
+        - name: Azure WebApp Container - Application Deployment
+          uses: azure/webapps-deploy@v2
+          with:
+            app-name: desafiodev-api-server
+            images: ${{ secrets.DOCKER_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{github.run_id}}
