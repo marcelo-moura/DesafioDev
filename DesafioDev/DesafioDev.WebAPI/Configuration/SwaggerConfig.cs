@@ -57,7 +57,7 @@ namespace DesafioDev.WebAPI.Configuration
         {
             var info = new OpenApiInfo()
             {
-                Title = "Desafio Dev - Base2 Tecnologia",
+                Title = "Desafio Dev - Base2 Tecnologia - Foo Bar",
                 Version = description.ApiVersion.ToString(),
                 Description = "API Rest para o Desafio Dev - Base2 Tecnologia",
                 Contact = new OpenApiContact
