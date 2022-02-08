@@ -18,9 +18,9 @@ jobs:
         - name: Docker Login - Azure Container Registry
           uses: Azure/docker-login@v1
           with:
-            username: ${{ serets.DOCKER_USERNAME}}
-            password: ${{ serets.DOCKER_PASSWORD}}
-            login-server: ${{ serets.DOCKER_CONTAINER_REGISTRY}}
+            username: ${{ secrets.DOCKER_USERNAME}}
+            password: ${{ secrets.DOCKER_PASSWORD}}
+            login-server: ${{ secrets.DOCKER_CONTAINER_REGISTRY}}
         
         - name: Build Images
           working-directory: ./DesafioDev/DesafioDev
