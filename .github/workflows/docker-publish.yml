@@ -23,7 +23,7 @@ jobs:
             login-server: ${{ secrets.DOCKER_CONTAINER_REGISTRY}}
         
         - name: Build Images
-          working-directory: ./DesafioDev/DesafioDev
+          working-directory: ./DesafioDev
           run: docker-compose build
           
         - name: Push para Azure Container Registry
