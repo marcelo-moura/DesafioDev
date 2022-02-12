@@ -1,4 +1,5 @@
 using DesafioDev.Infra.Data.Context;
+using DesafioDev.Infra.IoC;
 using DesafioDev.WebAPI.Configuration;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Rewrite;
@@ -14,12 +15,13 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddConfigurationApi();
 
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.ResolveDependencias(builder.Configuration);
+
 builder.Services.AddDbContext<DesafioDevContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 var app = builder.Build();
 

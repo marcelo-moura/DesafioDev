@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="v1\Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
@@ -19,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DesafioDev.Infra.Data\DesafioDev.Infra.Data.csproj" />
+    <ProjectReference Include="..\DesafioDev.Infra.IoC\DesafioDev.Infra.IoC.csproj" />
   </ItemGroup>
 
 </Project>
