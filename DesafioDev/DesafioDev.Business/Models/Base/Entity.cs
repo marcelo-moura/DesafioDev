@@ -1,6 +1,6 @@
 ﻿namespace DesafioDev.Business.Models.Base
 {
-    public class Entity : EntityBase
+    public abstract class Entity : EntityBase
     {
         public string CodigoUsuarioCadastro { get; set; }
         public string NomeUsuarioCadastro { get; set; }

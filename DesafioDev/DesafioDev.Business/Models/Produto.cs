@@ -8,7 +8,6 @@ namespace DesafioDev.Business.Models
         public Guid? CategoriaId { get; private set; }
         public string Nome { get; private set; }
         public string Descricao { get; private set; }
-        public bool Ativo { get; private set; }
         public decimal Preco { get; private set; }
         public int Quantidade { get; private set; }
 

@@ -18,37 +18,37 @@ namespace DesafioDev.WebAPI.v1.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return CustomResponse(_produtoService.FindAll());
+            return CustomResponse(await _produtoService.FindAll());
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            var produto = _produtoService.FindById(id);
+            var produto = await _produtoService.FindById(id);
             if (produto == null) return NotFound();
             return CustomResponse(produto);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Produto produto)
+        public async Task<IActionResult> Post([FromBody] Produto produto)
         {
             if (produto == null) return BadRequest();
-            return CustomResponse(_produtoService.Create(produto));
+            return CustomResponse(await _produtoService.Create(produto));
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Produto produto)
+        public async Task<IActionResult> Put([FromBody] Produto produto)
         {
             if (produto == null) return BadRequest();
-            return CustomResponse((_produtoService.Update(produto)));
+            return CustomResponse(await _produtoService.Update(produto));
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            _produtoService.Delete(id);
+            await _produtoService.Delete(id);
             return CustomResponse();
         }
     }

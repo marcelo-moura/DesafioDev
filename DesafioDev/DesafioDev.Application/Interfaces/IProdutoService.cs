@@ -1,13 +1,14 @@
-﻿using DesafioDev.Business.Models;
+﻿using DesafioDev.Application.Interfaces.Base;
+using DesafioDev.Business.Models;
 
 namespace DesafioDev.Application.Interfaces
 {
-    public interface IProdutoService
+    public interface IProdutoService : IServiceBase<Produto>
     {
-        List<Produto> FindAll();
-        Produto FindById(Guid id);
-        Produto Create(Produto produto);
-        Produto Update(Produto produto);
-        void Delete(Guid id);
+        Task<IList<Produto>> FindAll();
+        Task<Produto> FindById(Guid id);
+        Task<Produto> Create(Produto produto);
+        Task<Produto> Update(Produto produto);
+        Task Delete(Guid id);
     }
 }

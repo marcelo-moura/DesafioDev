@@ -3,6 +3,8 @@ using DesafioDev.Application.Services;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Notificacoes;
 using DesafioDev.Infra.Data.Context;
+using DesafioDev.Infra.Data.Repository;
+using DesafioDev.Infra.InterfacesRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,10 +14,19 @@ namespace DesafioDev.Infra.IoC
     {
         public static IServiceCollection ResolveDependencias(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<INotificador, Notificador>();
+            #region Register Context
             services.AddScoped<DesafioDevContext>();
+            #endregion
 
+            #region Register Servies
             services.AddScoped<IProdutoService, ProdutoService>();
+            #endregion
+
+            #region Register Repositories
+            services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            #endregion
+
+            services.AddScoped<INotificador, Notificador>();
 
             return services;
         }

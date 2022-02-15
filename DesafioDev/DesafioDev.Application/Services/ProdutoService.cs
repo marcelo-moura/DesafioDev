@@ -1,33 +1,36 @@
 ﻿using DesafioDev.Application.Interfaces;
+using DesafioDev.Application.Services.Base;
 using DesafioDev.Business.Models;
-using DesafioDev.Infra.Data.Context;
+using DesafioDev.Core.Interfaces;
+using DesafioDev.Infra.InterfacesRepository;
 
 namespace DesafioDev.Application.Services
 {
-    public class ProdutoService : IProdutoService
+    public class ProdutoService : ServiceBase<Produto>, IProdutoService
     {
-        private readonly DesafioDevContext _context;
-        public ProdutoService(DesafioDevContext context)
+        private readonly IProdutoRepository _produtoRepository;
+
+        public ProdutoService(IProdutoRepository produtoRepository,
+                              INotificador notificador) : base(produtoRepository, notificador)
         {
-            _context = context;
+            _produtoRepository = produtoRepository;
         }
 
-        public List<Produto> FindAll()
+        public async Task<IList<Produto>> FindAll()
         {
-            return _context.Produtos.ToList();
+            return await _produtoRepository.ObterTodos();
         }
 
-        public Produto FindById(Guid id)
+        public async Task<Produto> FindById(Guid id)
         {
-            return _context.Produtos.FirstOrDefault(p => p.Id == id);
+            return await _produtoRepository.ObterPorId(id);
         }
 
-        public Produto Create(Produto produto)
+        public async Task<Produto> Create(Produto produto)
         {
             try
             {
-                _context.Add(produto);
-                _context.SaveChanges();
+                await _produtoRepository.Adicionar(produto);
             }
             catch (Exception)
             {
@@ -35,18 +38,17 @@ namespace DesafioDev.Application.Services
             }
             return produto;
         }
-        public Produto Update(Produto produto)
+        public async Task<Produto> Update(Produto produto)
         {
-            if (!Exists(produto.Id)) return null;
+            if (!await _produtoRepository.ExisteRegistro(p => p.Id == produto.Id)) return null;
 
-            var result = _context.Produtos.FirstOrDefault(p => p.Id == produto.Id);
+            var result = await _produtoRepository.BuscarPor(p => p.Id == produto.Id);
 
             if (result != null)
             {
                 try
                 {
-                    _context.Entry(result).CurrentValues.SetValues(produto);
-                    _context.SaveChanges();
+                    await _produtoRepository.Atualizar(produto);
                 }
                 catch (Exception)
                 {
@@ -56,27 +58,16 @@ namespace DesafioDev.Application.Services
             return produto;
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            var result = _context.Produtos.FirstOrDefault(p => p.Id == id);
-
-            if (result != null)
+            try
             {
-                try
-                {
-                    _context.Produtos.Remove(result);
-                    _context.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                await _produtoRepository.Remover(id);
             }
-        }
-
-        private bool Exists(Guid id)
-        {
-            return _context.Produtos.Any(p => p.Id == id);
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
