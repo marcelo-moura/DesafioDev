@@ -8,9 +8,9 @@ services:
       dockerfile: Dockerfile
     environment:
       TZ: America/Sao_Paulo
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Production
     ports:
-      - 44353:80
+      - 44352:80
     networks:
       - desafiodev-network
 networks:
