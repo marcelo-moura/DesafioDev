@@ -44,5 +44,6 @@ namespace DesafioDev.Infra.Data.Context
         }
 
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
     }
 }
