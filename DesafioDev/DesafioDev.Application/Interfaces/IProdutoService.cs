@@ -1,4 +1,5 @@
 ﻿using DesafioDev.Application.Interfaces.Base;
+using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Business.Models;
 
 namespace DesafioDev.Application.Interfaces
@@ -7,8 +8,8 @@ namespace DesafioDev.Application.Interfaces
     {
         Task<IList<Produto>> FindAll();
         Task<Produto> FindById(Guid id);
-        Task<Produto> Create(Produto produto);
-        Task<Produto> Update(Produto produto);
+        Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada);
+        Task<Produto> Update(AtualizarProdutoViewModelEntrada atualizarProdutoEntrada);
         Task Delete(Guid id);
     }
 }

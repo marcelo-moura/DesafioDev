@@ -11,7 +11,7 @@ namespace DesafioDev.Business.Models
         public decimal Preco { get; private set; }
         public int Quantidade { get; private set; }
 
-        public Categoria Categoria { get; private set; }
+        public Categoria? Categoria { get; private set; }
 
         protected Produto() { }
 
@@ -42,5 +42,7 @@ namespace DesafioDev.Business.Models
         {
             return Quantidade >= quantidade;
         }
+
+        public void SetCategoriaId(Guid? guid) => CategoriaId = guid;
     }
 }

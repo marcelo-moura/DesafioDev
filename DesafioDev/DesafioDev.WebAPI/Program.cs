@@ -1,3 +1,4 @@
+using DesafioDev.Application.AutoMapper.Mappings;
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.IoC;
 using DesafioDev.WebAPI.Configuration;
@@ -17,6 +18,7 @@ builder.Services.AddConfigurationApi();
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.ResolveDependencias(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(ViewModelToDomainProfile), typeof(DomainToViewModelProfile));
 
 builder.Services.AddDbContext<DesafioDevContext>(options =>
 {

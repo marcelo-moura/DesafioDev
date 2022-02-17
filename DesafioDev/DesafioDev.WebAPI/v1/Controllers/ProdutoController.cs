@@ -1,5 +1,5 @@
 ﻿using DesafioDev.Application.Interfaces;
-using DesafioDev.Business.Models;
+using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.WebAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -32,17 +32,17 @@ namespace DesafioDev.WebAPI.v1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Produto produto)
+        public async Task<IActionResult> Post([FromBody] ProdutoViewModelEntrada produtoEntrada)
         {
-            if (produto == null) return BadRequest();
-            return CustomResponse(await _produtoService.Create(produto));
+            if (produtoEntrada == null) return BadRequest();
+            return CustomResponse(await _produtoService.Create(produtoEntrada));
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Produto produto)
+        public async Task<IActionResult> Put([FromBody] AtualizarProdutoViewModelEntrada atualizarProdutoEntrada)
         {
-            if (produto == null) return BadRequest();
-            return CustomResponse(await _produtoService.Update(produto));
+            if (atualizarProdutoEntrada == null) return BadRequest();
+            return CustomResponse(await _produtoService.Update(atualizarProdutoEntrada));
         }
 
         [HttpDelete("{id}")]
