@@ -30,6 +30,11 @@ namespace DesafioDev.Application.Services
             return await _produtoRepository.ObterPorId(id);
         }
 
+        public async Task<IList<ProdutoViewModelSaida>> FindByCategoria(Guid? categoriaId)
+        {
+            return _mapper.Map<IList<ProdutoViewModelSaida>>(await _produtoRepository.ObterPorCategoria(categoriaId));
+        }
+
         public async Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada)
         {
             var produto = _mapper.Map<Produto>(produtoEntrada);

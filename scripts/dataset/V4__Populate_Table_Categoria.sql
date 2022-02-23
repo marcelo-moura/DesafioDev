@@ -1,0 +1,1 @@
+INSERT [dbo].[Categoria] ([Id], [Codigo], [Nome], [Ativo], [CodigoUsuarioCadastro], [NomeUsuarioCadastro], [DataCadastro], [CodigoUsuarioAlteracao], [NomeUsuarioAlteracao], [DataAlteracao]) VALUES (N'3fa85f64-5717-4562-b3fc-2c963f66afa6', 1, N'Informática', 1, N'AD001', N'Marcelo Henrique', CAST(N'2022-02-15T19:55:15.060' AS DateTime), NULL, NULL, NULL)

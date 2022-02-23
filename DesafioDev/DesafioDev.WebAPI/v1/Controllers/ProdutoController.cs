@@ -31,6 +31,14 @@ namespace DesafioDev.WebAPI.v1.Controllers
             return CustomResponse(produto);
         }
 
+        [HttpGet("getByCategoria/{categoriaId}")]
+        public async Task<IActionResult> GetByCategoria(Guid? categoriaId)
+        {
+            var produtos = await _produtoService.FindByCategoria(categoriaId);
+            if (produtos == null) return NotFound();
+            return CustomResponse(produtos);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProdutoViewModelEntrada produtoEntrada)
         {
