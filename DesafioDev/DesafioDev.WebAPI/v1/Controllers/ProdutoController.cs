@@ -31,10 +31,26 @@ namespace DesafioDev.WebAPI.v1.Controllers
             return CustomResponse(produto);
         }
 
+        [HttpGet("getByNome/{nome}")]
+        public async Task<IActionResult> GetByNome(string nome)
+        {
+            var produtos = await _produtoService.FindByNome(nome);
+            if (produtos == null) return NotFound();
+            return CustomResponse(produtos);
+        }
+
         [HttpGet("getByCategoria/{categoriaId}")]
         public async Task<IActionResult> GetByCategoria(Guid? categoriaId)
         {
             var produtos = await _produtoService.FindByCategoria(categoriaId);
+            if (produtos == null) return NotFound();
+            return CustomResponse(produtos);
+        }
+
+        [HttpGet("getByPreco/{preco}")]
+        public async Task<IActionResult> GetByPreco(decimal? preco)
+        {
+            var produtos = await _produtoService.FindByPreco(preco);
             if (produtos == null) return NotFound();
             return CustomResponse(produtos);
         }

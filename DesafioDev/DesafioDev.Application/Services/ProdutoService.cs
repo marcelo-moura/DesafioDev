@@ -30,9 +30,19 @@ namespace DesafioDev.Application.Services
             return await _produtoRepository.ObterPorId(id);
         }
 
+        public async Task<IEnumerable<ProdutoViewModelSaida>> FindByNome(string nome)
+        {
+            return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Nome.Contains(nome)));
+        }
+
         public async Task<IList<ProdutoViewModelSaida>> FindByCategoria(Guid? categoriaId)
         {
             return _mapper.Map<IList<ProdutoViewModelSaida>>(await _produtoRepository.ObterPorCategoria(categoriaId));
+        }
+
+        public async Task<IEnumerable<ProdutoViewModelSaida>> FindByPreco(decimal? preco)
+        {
+            return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Preco == preco));
         }
 
         public async Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada)

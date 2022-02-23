@@ -8,7 +8,9 @@ namespace DesafioDev.Application.Interfaces
     {
         Task<IList<Produto>> FindAll();
         Task<Produto> FindById(Guid id);
+        Task<IEnumerable<ProdutoViewModelSaida>> FindByNome(string nome);
         Task<IList<ProdutoViewModelSaida>> FindByCategoria(Guid? categoriaId);
+        Task<IEnumerable<ProdutoViewModelSaida>> FindByPreco(decimal? preco);
         Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada);
         Task<Produto> Update(AtualizarProdutoViewModelEntrada atualizarProdutoEntrada);
         Task Delete(Guid id);
