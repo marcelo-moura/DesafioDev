@@ -1,5 +1,5 @@
 ﻿using DesafioDev.Application.Interfaces;
-using DesafioDev.Business.Models;
+using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.WebAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -31,18 +31,42 @@ namespace DesafioDev.WebAPI.v1.Controllers
             return CustomResponse(produto);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Produto produto)
+        [HttpGet("getByNome/{nome}")]
+        public async Task<IActionResult> GetByNome(string nome)
         {
-            if (produto == null) return BadRequest();
-            return CustomResponse(await _produtoService.Create(produto));
+            var produtos = await _produtoService.FindByNome(nome);
+            if (produtos == null) return NotFound();
+            return CustomResponse(produtos);
+        }
+
+        [HttpGet("getByCategoria/{categoriaId}")]
+        public async Task<IActionResult> GetByCategoria(Guid? categoriaId)
+        {
+            var produtos = await _produtoService.FindByCategoria(categoriaId);
+            if (produtos == null) return NotFound();
+            return CustomResponse(produtos);
+        }
+
+        [HttpGet("getByPreco/{preco}")]
+        public async Task<IActionResult> GetByPreco(decimal? preco)
+        {
+            var produtos = await _produtoService.FindByPreco(preco);
+            if (produtos == null) return NotFound();
+            return CustomResponse(produtos);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] ProdutoViewModelEntrada produtoEntrada)
+        {
+            if (produtoEntrada == null) return BadRequest();
+            return CustomResponse(await _produtoService.Create(produtoEntrada));
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Produto produto)
+        public async Task<IActionResult> Put([FromBody] AtualizarProdutoViewModelEntrada atualizarProdutoEntrada)
         {
-            if (produto == null) return BadRequest();
-            return CustomResponse(await _produtoService.Update(produto));
+            if (atualizarProdutoEntrada == null) return BadRequest();
+            return CustomResponse(await _produtoService.Update(atualizarProdutoEntrada));
         }
 
         [HttpDelete("{id}")]

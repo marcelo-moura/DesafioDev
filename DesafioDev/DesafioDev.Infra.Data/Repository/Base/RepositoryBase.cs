@@ -8,8 +8,8 @@ namespace DesafioDev.Infra.Data.Repository.Base
 {
     public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
     {
-        private readonly DesafioDevContext Db;
-        private readonly DbSet<TEntity> DbSet;
+        protected readonly DesafioDevContext Db;
+        protected readonly DbSet<TEntity> DbSet;
 
         public RepositoryBase(DesafioDevContext context)
         {
