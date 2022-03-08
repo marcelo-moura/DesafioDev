@@ -1,5 +1,6 @@
 ﻿using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.ViewModels.Entrada;
+using DesafioDev.Core.Hypermedia.Filters;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.WebAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +19,19 @@ namespace DesafioDev.WebAPI.v1.Controllers
         }
 
         [HttpGet]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public async Task<IActionResult> Get()
         {
-            return CustomResponse(await _produtoService.FindAll());
+            return Ok(await _produtoService.FindAll());
         }
 
         [HttpGet("{id}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public async Task<IActionResult> Get(Guid id)
         {
             var produto = await _produtoService.FindById(id);
             if (produto == null) return NotFound();
-            return CustomResponse(produto);
+            return Ok(produto);
         }
 
         [HttpGet("getByNome/{nome}")]

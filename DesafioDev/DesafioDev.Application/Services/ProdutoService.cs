@@ -2,6 +2,7 @@
 using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.Services.Base;
 using DesafioDev.Application.ViewModels.Entrada;
+using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Models;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Infra.InterfacesRepository;
@@ -20,14 +21,14 @@ namespace DesafioDev.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IList<Produto>> FindAll()
+        public async Task<IList<ProdutoViewModelSaida>> FindAll()
         {
-            return await _produtoRepository.ObterTodos();
+            return _mapper.Map<IList<ProdutoViewModelSaida>>(await _produtoRepository.ObterTodos());
         }
 
-        public async Task<Produto> FindById(Guid id)
+        public async Task<ProdutoViewModelSaida> FindById(Guid id)
         {
-            return await _produtoRepository.ObterPorId(id);
+            return _mapper.Map<ProdutoViewModelSaida>(await _produtoRepository.ObterPorId(id));
         }
 
         public async Task<IEnumerable<ProdutoViewModelSaida>> FindByNome(string nome)

@@ -25,7 +25,7 @@ namespace DesafioDev.WebAPI.Controllers.Base
             {
                 return Ok(new
                 {
-                    succes = true,
+                    success = true,
                     data
                 });
             }
@@ -42,7 +42,7 @@ namespace DesafioDev.WebAPI.Controllers.Base
         {
             return BadRequest(new
             {
-                succes = false,
+                success = false,
                 erros = _notificador.ObterNotificacoes().Select(n => n.Mensagem),
                 detail = result
             });

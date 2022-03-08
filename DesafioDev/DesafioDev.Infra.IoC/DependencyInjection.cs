@@ -1,5 +1,7 @@
-﻿using DesafioDev.Application.Interfaces;
+﻿using DesafioDev.Application.Enricher;
+using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.Services;
+using DesafioDev.Core.Hypermedia.Filters;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Notificacoes;
 using DesafioDev.Infra.Data.Context;
@@ -27,6 +29,11 @@ namespace DesafioDev.Infra.IoC
             #endregion
 
             services.AddScoped<INotificador, Notificador>();
+
+            var filterOptions = new HyperMediaFilterOptions();
+            filterOptions.ContentResponseEnricherList.Add(new ProdutoEnricher());
+
+            services.AddSingleton(filterOptions);
 
             return services;
         }

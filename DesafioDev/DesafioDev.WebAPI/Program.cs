@@ -53,6 +53,7 @@ app.UseConfigurationApi();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
+    endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
 });
 
 app.Run();
