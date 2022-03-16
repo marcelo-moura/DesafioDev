@@ -19,22 +19,14 @@ namespace DesafioDev.WebAPI.Configuration
                 options.SubstituteApiVersionInUrl = true;
             });
 
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader();
-                });
-            });
+            services.AddCors();
 
             return services;
         }
 
         public static IApplicationBuilder UseConfigurationApi(this IApplicationBuilder app)
         {
-            app.UseCors("Development");
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             return app;
         }
     }

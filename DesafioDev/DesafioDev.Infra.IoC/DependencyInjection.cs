@@ -20,12 +20,14 @@ namespace DesafioDev.Infra.IoC
             services.AddScoped<DesafioDevContext>();
             #endregion
 
-            #region Register Servies
+            #region Register Services
             services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<ITokenService, TokenService>();
             #endregion
 
             #region Register Repositories
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             #endregion
 
             services.AddScoped<INotificador, Notificador>();
