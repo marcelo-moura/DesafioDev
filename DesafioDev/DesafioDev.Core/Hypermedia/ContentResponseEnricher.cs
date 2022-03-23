@@ -1,4 +1,5 @@
 ﻿using DesafioDev.Core.Interfaces;
+using DesafioDev.Core.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -13,7 +14,7 @@ namespace DesafioDev.Core.Hypermedia
 
         public bool CanEnrich(Type contentType)
         {
-            return contentType == typeof(T) || contentType == typeof(List<T>);
+            return contentType == typeof(T) || contentType == typeof(List<T>) || contentType == typeof(PagedSearchViewModel<T>);
         }
 
         protected abstract Task EnrichModel(T content, IUrlHelper urlHelper);
@@ -41,6 +42,13 @@ namespace DesafioDev.Core.Hypermedia
                 {
                     ConcurrentBag<T> bag = new ConcurrentBag<T>(collection);
                     Parallel.ForEach(bag, (element) =>
+                    {
+                        EnrichModel(element, urlHelper);
+                    });
+                }
+                else if (okObjectResult.Value is PagedSearchViewModel<T> pagedSearch)
+                {
+                    Parallel.ForEach(pagedSearch.ListObject.ToList(), (element) =>
                     {
                         EnrichModel(element, urlHelper);
                     });

@@ -12,6 +12,16 @@ namespace DesafioDev.Infra.Data.Repository
         {
         }
 
+        public override Task<IList<Produto>> BuscarComPagedSearch(string nameProcedure, string pesquisa, string sort, int offset, int size)
+        {
+            return base.BuscarComPagedSearch(nameProcedure, pesquisa, sort, offset, size);
+        }
+
+        public async Task<int> GetCountName(string pesquisa)
+        {
+            return await Db.Produtos.AsNoTracking().Where(p => p.Nome.Contains(pesquisa)).CountAsync();
+        }
+
         public async Task<List<Produto>> ObterPorCategoria(Guid? categoriaId)
         {
             return await Db.Produtos.AsNoTracking().Include(p => p.Categoria).Where(p => p.Categoria.Id == categoriaId).ToListAsync();

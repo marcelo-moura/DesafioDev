@@ -60,6 +60,15 @@ namespace DesafioDev.WebAPI.v1.Controllers
             return CustomResponse(produtos);
         }
 
+        [HttpGet("{sortDirection}/{pageSize}/{page}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public async Task<IActionResult> GetPagedSearch([FromQuery] string name, string sortDirection, int pageSize, int page)
+        {
+            var produtos = await _produtoService.FindPagedSearch(name, sortDirection, pageSize, page);
+            if (produtos == null) return NotFound();
+            return Ok(produtos);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProdutoViewModelEntrada produtoEntrada)
         {
