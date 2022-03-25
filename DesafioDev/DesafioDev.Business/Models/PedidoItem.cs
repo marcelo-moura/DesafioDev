@@ -14,6 +14,14 @@ namespace DesafioDev.Business.Models
 
         protected PedidoItem() { }
 
+        public PedidoItem(Guid produtoId, string nomeProduto, int quantidade, decimal valorUnitario)
+        {
+            ProdutoId = produtoId;
+            NomeProduto = nomeProduto;
+            Quantidade = quantidade;
+            ValorUnitario = valorUnitario;
+        }
+
         internal void AssociarPedido(Guid pedidoId)
         {
             PedidoId = pedidoId;

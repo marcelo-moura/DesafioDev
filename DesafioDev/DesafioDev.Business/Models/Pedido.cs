@@ -3,7 +3,7 @@ using DesafioDev.Business.Models.Base;
 
 namespace DesafioDev.Business.Models
 {
-    public class Pedido : Entity
+    public partial class Pedido : Entity
     {
         public int Codigo { get; private set; }
         public Guid UsuarioId { get; set; }
@@ -48,5 +48,19 @@ namespace DesafioDev.Business.Models
         }
 
         public void SetStatusPedido(EPedidoStatus pedidoStatus) => PedidoStatus = pedidoStatus;
+
+        public static class PedidoFactory
+        {
+            public static Pedido NovoPedidoRascunho(Guid usuarioId)
+            {
+                var pedido = new Pedido
+                {
+                    UsuarioId = usuarioId,
+                };
+
+                pedido.SetStatusPedido(EPedidoStatus.Rascunho);
+                return pedido;
+            }
+        }
     }
 }

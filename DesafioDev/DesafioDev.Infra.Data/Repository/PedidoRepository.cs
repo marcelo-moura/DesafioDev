@@ -1,7 +1,9 @@
-﻿using DesafioDev.Business.Models;
+﻿using DesafioDev.Business.Enums;
+using DesafioDev.Business.Models;
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.Data.Repository.Base;
 using DesafioDev.Infra.InterfacesRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace DesafioDev.Infra.Data.Repository
 {
@@ -11,14 +13,22 @@ namespace DesafioDev.Infra.Data.Repository
         {
         }
 
-        public Task<IEnumerable<Pedido>> ObterListaPorClienteId(Guid clienteId)
+        public async Task<IEnumerable<Pedido>> ObterListaPorUsuarioId(Guid usuarioId)
         {
-            throw new NotImplementedException();
+            return await Db.Pedidos.AsNoTracking().Where(p => p.UsuarioId == usuarioId).ToListAsync();
         }
 
-        public Task<Pedido> ObterPedidoRascunhoPorClienteId(Guid clienteId)
+        public async Task<Pedido> ObterPedidoRascunhoPorUsuarioId(Guid usuarioId)
         {
-            throw new NotImplementedException();
+            var pedido = await Db.Pedidos
+                .FirstOrDefaultAsync(p => p.UsuarioId == usuarioId && p.PedidoStatus == EPedidoStatus.Rascunho);
+            
+            if (pedido == null) return null;
+
+            await Db.Entry(pedido)
+                .Collection(i => i.PedidoItems).LoadAsync();
+
+            return pedido;
         }
     }
 }

@@ -23,11 +23,14 @@ namespace DesafioDev.Infra.IoC
             #region Register Services
             services.AddScoped<IProdutoService, ProdutoService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPedidoService, PedidoService>();
             #endregion
 
             #region Register Repositories
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<IPedidoItemRepository, PedidoItemRepository>();
             #endregion
 
             services.AddScoped<INotificador, Notificador>();
