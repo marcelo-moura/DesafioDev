@@ -1,7 +1,7 @@
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Pedido' and xtype='U')
     CREATE TABLE Pedido (
 		Id uniqueidentifier not null primary key,
-        Codigo int not null,
+        Codigo varchar(15) not null,
 		UsuarioId uniqueidentifier not null CONSTRAINT [FK_Pedido_Usuario] FOREIGN KEY([UsuarioId]) REFERENCES [dbo].[Usuario] ([Id]),
 		ValorTotal decimal(18,2) not null,
         PedidoStatus int not null,

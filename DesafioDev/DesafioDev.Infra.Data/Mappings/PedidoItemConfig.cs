@@ -16,6 +16,9 @@ namespace DesafioDev.Infra.Data.Mappings
             builder.Property(p => p.Quantidade);
             builder.Property(p => p.ValorUnitario);
 
+            builder.HasOne(c => c.Pedido)
+                .WithMany(c => c.PedidoItems);
+
             builder.Ignore(p => p.Ativo);
 
             builder.ToTable("PedidoItem");

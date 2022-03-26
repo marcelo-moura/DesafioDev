@@ -2,9 +2,11 @@
 using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.Services.Base;
 using DesafioDev.Application.ViewModels.Entrada;
+using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Enums;
 using DesafioDev.Business.Models;
 using DesafioDev.Core.Interfaces;
+using DesafioDev.Infra.Common.Utils;
 using DesafioDev.Infra.InterfacesRepository;
 
 namespace DesafioDev.Application.Services
@@ -22,7 +24,7 @@ namespace DesafioDev.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<Pedido> IniciarPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada)
+        public async Task<PedidoViewModelSaida> IniciarPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada)
         {
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorUsuarioId(pedidoEntrada.UsuarioId);
             var pedidoItem = new PedidoItem(pedidoEntrada.ProdutoId, pedidoEntrada.Nome, pedidoEntrada.Quantidade, pedidoEntrada.ValorUnitario);
@@ -31,12 +33,13 @@ namespace DesafioDev.Application.Services
             {
                 pedido = _mapper.Map<Pedido>(pedidoEntrada);
                 pedido.AdicionarItem(pedidoItem);
+                pedido.SetCodigoPedido(Utils.GerarCodigoPedido());
                 pedido.SetStatusPedido(EPedidoStatus.Rascunho);
 
                 await _pedidoRepository.Adicionar(pedido);
             }
 
-            return pedido;
+            return _mapper.Map<PedidoViewModelSaida>(pedido);
         }
     }
 }

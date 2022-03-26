@@ -3,17 +3,17 @@ using DesafioDev.Business.Models.Base;
 
 namespace DesafioDev.Business.Models
 {
-    public partial class Pedido : Entity
+    public class Pedido : Entity
     {
-        public int Codigo { get; private set; }
-        public Guid UsuarioId { get; set; }
-        public decimal ValorTotal { get; set; }
-        public EPedidoStatus PedidoStatus { get; set; }
+        public string Codigo { get; private set; }
+        public Guid UsuarioId { get; private set; }
+        public decimal ValorTotal { get; private set; }
+        public EPedidoStatus PedidoStatus { get; private set; }
 
         private readonly List<PedidoItem> _pedidoItems;
         public IReadOnlyCollection<PedidoItem> PedidoItems => _pedidoItems;
 
-        public Pedido()
+        protected Pedido()
         {
             _pedidoItems = new List<PedidoItem>();
         }
@@ -47,20 +47,7 @@ namespace DesafioDev.Business.Models
             ValorTotal = PedidoItems.Sum(p => p.CalcularValor());
         }
 
+        public void SetCodigoPedido(string codigoPedido) => Codigo = codigoPedido;
         public void SetStatusPedido(EPedidoStatus pedidoStatus) => PedidoStatus = pedidoStatus;
-
-        public static class PedidoFactory
-        {
-            public static Pedido NovoPedidoRascunho(Guid usuarioId)
-            {
-                var pedido = new Pedido
-                {
-                    UsuarioId = usuarioId,
-                };
-
-                pedido.SetStatusPedido(EPedidoStatus.Rascunho);
-                return pedido;
-            }
-        }
     }
 }

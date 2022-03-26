@@ -12,6 +12,13 @@ namespace DesafioDev.Application.AutoMapper.Mappings
                 .ForMember(d => d.CodigoUsuario, o => o.MapFrom(s => s.CodigoUsuarioCadastro))
                 .ForMember(d => d.NomeUsuario, o => o.MapFrom(s => s.NomeUsuarioCadastro))
                 .ForMember(d => d.Links, o => o.Ignore());
+
+            CreateMap<Pedido, PedidoViewModelSaida>()
+                .ForMember(d => d.CodigoUsuario, o => o.MapFrom(s => s.CodigoUsuarioCadastro))
+                .ForMember(d => d.NomeUsuario, o => o.MapFrom(s => s.NomeUsuarioCadastro))
+                .ForMember(d => d.PedidoItemsSaida, o => o.MapFrom(s => s.PedidoItems));
+
+            CreateMap<PedidoItem, PedidoItemViewModelSaida>();
         }
     }
 }
