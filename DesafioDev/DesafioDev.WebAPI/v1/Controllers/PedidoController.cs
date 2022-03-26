@@ -1,8 +1,7 @@
 ﻿using DesafioDev.Application.Interfaces;
-using DesafioDev.Business.Models;
+using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.WebAPI.Controllers.Base;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DesafioDev.WebAPI.v1.Controllers
@@ -20,10 +19,10 @@ namespace DesafioDev.WebAPI.v1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Pedido produtoEntrada)
+        public async Task<IActionResult> Post([FromBody] AdicionarItemPedidoViewModelEntrada pedidoEntrada)
         {
-            if (produtoEntrada == null) return BadRequest();
-            return CustomResponse(await _pedidoService.IniciarPedido(produtoEntrada));
+            if (pedidoEntrada == null) return BadRequest();
+            return CustomResponse(await _pedidoService.IniciarPedido(pedidoEntrada));
         }
     }
 }
