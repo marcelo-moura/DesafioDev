@@ -14,17 +14,20 @@ namespace DesafioDev.Application.Services
     public class PedidoService : ServiceBase<Pedido>, IPedidoService
     {
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly IPedidoItemRepository _pedidoItemRepository;
         private readonly IMapper _mapper;
 
         public PedidoService(IPedidoRepository pedidoRepository,
+                             IPedidoItemRepository pedidoItemRepository,
                              IMapper mapper,
                              INotificador notificador) : base(pedidoRepository, notificador)
         {
             _pedidoRepository = pedidoRepository;
+            _pedidoItemRepository = pedidoItemRepository;
             _mapper = mapper;
         }
 
-        public async Task<PedidoViewModelSaida> IniciarPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada)
+        public async Task<PedidoViewModelSaida> AdicionarItemPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada)
         {
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorUsuarioId(pedidoEntrada.UsuarioId);
             var pedidoItem = new PedidoItem(pedidoEntrada.ProdutoId, pedidoEntrada.Nome, pedidoEntrada.Quantidade, pedidoEntrada.ValorUnitario);
@@ -37,6 +40,16 @@ namespace DesafioDev.Application.Services
                 pedido.SetStatusPedido(EPedidoStatus.Rascunho);
 
                 await _pedidoRepository.Adicionar(pedido);
+            }
+            else
+            {
+                var pedidoItemExiste = pedido.PedidoItemExistente(pedidoItem);
+                pedido.AdicionarItem(pedidoItem);
+
+                if (pedidoItemExiste)
+                    await _pedidoItemRepository.Atualizar(pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId));
+                else
+                    await _pedidoItemRepository.Adicionar(pedidoItem);
             }
 
             return _mapper.Map<PedidoViewModelSaida>(pedido);

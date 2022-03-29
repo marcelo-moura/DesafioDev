@@ -18,11 +18,11 @@ namespace DesafioDev.WebAPI.v1.Controllers
             _pedidoService = pedidoService;
         }
 
-        [HttpPost]
+        [HttpPost("adicionarItem")]
         public async Task<IActionResult> Post([FromBody] AdicionarItemPedidoViewModelEntrada pedidoEntrada)
         {
             if (pedidoEntrada == null) return BadRequest();
-            return CustomResponse(await _pedidoService.IniciarPedido(pedidoEntrada));
+            return CustomResponse(await _pedidoService.AdicionarItemPedido(pedidoEntrada));
         }
     }
 }

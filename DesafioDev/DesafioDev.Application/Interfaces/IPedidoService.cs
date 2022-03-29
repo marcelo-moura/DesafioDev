@@ -7,6 +7,6 @@ namespace DesafioDev.Application.Interfaces
 {
     public interface IPedidoService : IServiceBase<Pedido>
     {
-        Task<PedidoViewModelSaida> IniciarPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada);
+        Task<PedidoViewModelSaida> AdicionarItemPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada);
     }
 }
