@@ -2,8 +2,10 @@
 using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.Services.Base;
 using DesafioDev.Application.ViewModels.Entrada;
+using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Models;
 using DesafioDev.Core.Interfaces;
+using DesafioDev.Core.Utils;
 using DesafioDev.Infra.InterfacesRepository;
 
 namespace DesafioDev.Application.Services
@@ -20,14 +22,14 @@ namespace DesafioDev.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IList<Produto>> FindAll()
+        public async Task<IList<ProdutoViewModelSaida>> FindAll()
         {
-            return await _produtoRepository.ObterTodos();
+            return _mapper.Map<IList<ProdutoViewModelSaida>>(await _produtoRepository.ObterTodos());
         }
 
-        public async Task<Produto> FindById(Guid id)
+        public async Task<ProdutoViewModelSaida> FindById(Guid id)
         {
-            return await _produtoRepository.ObterPorId(id);
+            return _mapper.Map<ProdutoViewModelSaida>(await _produtoRepository.ObterPorId(id));
         }
 
         public async Task<IEnumerable<ProdutoViewModelSaida>> FindByNome(string nome)
@@ -43,6 +45,25 @@ namespace DesafioDev.Application.Services
         public async Task<IEnumerable<ProdutoViewModelSaida>> FindByPreco(decimal? preco)
         {
             return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Preco == preco));
+        }
+
+        public async Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(string name, string sortDirection, int pageSize, int page)
+        {
+            var sort = (!string.IsNullOrWhiteSpace(sortDirection) && !sortDirection.Equals("desc")) ? "asc" : "desc";
+            var size = pageSize < 1 ? 10 : pageSize;
+            var offset = page > 0 ? (page - 1) * size : 0;
+
+            var produtos = await _produtoRepository.BuscarComPagedSearch("sp_ListarProdutos", name, sort, offset, size);
+            int totalResults = await _produtoRepository.GetCountName(name);
+
+            return new PagedSearchViewModel<ProdutoViewModelSaida>
+            {
+                CurrentPage = page,
+                ListObject = _mapper.Map<List<ProdutoViewModelSaida>>(produtos),
+                PageSize = size,
+                SortDirections = sort,
+                TotalResults = totalResults,
+            };
         }
 
         public async Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada)

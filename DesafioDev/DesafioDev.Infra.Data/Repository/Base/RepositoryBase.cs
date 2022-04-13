@@ -55,6 +55,11 @@ namespace DesafioDev.Infra.Data.Repository.Base
             return await DbSet.AsNoTracking().Where(predicate).FirstOrDefaultAsync();
         }
 
+        public virtual async Task<IList<TEntity>> BuscarComPagedSearch(string nameProcedure, string pesquisa, string sort, int offset, int size)
+        {
+            return await DbSet.FromSqlInterpolated<TEntity>($"{nameProcedure} {pesquisa}, {sort}, {offset}, {size}").ToListAsync();
+        }
+
         public async Task<bool> ExisteRegistro(Expression<Func<TEntity, bool>> predicate)
         {
             return await DbSet.AsNoTracking().Where(predicate).AnyAsync();
@@ -63,7 +68,7 @@ namespace DesafioDev.Infra.Data.Repository.Base
         private Task<int> SaveChanges()
         {
             return Db.SaveChangesAsync();
-        }
+        }       
 
         public void Dispose()
         {

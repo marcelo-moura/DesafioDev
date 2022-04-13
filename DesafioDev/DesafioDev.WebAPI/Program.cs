@@ -19,6 +19,7 @@ builder.Services.AddConfigurationApi();
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.ResolveDependencias(builder.Configuration);
+builder.Services.AddJWTConfiguration(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(ViewModelToDomainProfile), typeof(DomainToViewModelProfile));
 
 builder.Services.AddDbContext<DesafioDevContext>(options =>
@@ -37,9 +38,13 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseConfigurationApi();
 
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 app.UseSwaggerConfiguration(apiVersionDescriptionProvider);
@@ -48,11 +53,10 @@ var option = new RewriteOptions();
 option.AddRedirect("^$", "swagger");
 app.UseRewriter(option);
 
-app.UseConfigurationApi();
-
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
+    endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
 });
 
 app.Run();

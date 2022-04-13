@@ -1,5 +1,7 @@
-﻿using DesafioDev.Application.Interfaces;
+﻿using DesafioDev.Application.Enricher;
+using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.Services;
+using DesafioDev.Core.Hypermedia.Filters;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Notificacoes;
 using DesafioDev.Infra.Data.Context;
@@ -18,15 +20,25 @@ namespace DesafioDev.Infra.IoC
             services.AddScoped<DesafioDevContext>();
             #endregion
 
-            #region Register Servies
+            #region Register Services
             services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPedidoService, PedidoService>();
             #endregion
 
             #region Register Repositories
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<IPedidoItemRepository, PedidoItemRepository>();
             #endregion
 
             services.AddScoped<INotificador, Notificador>();
+
+            var filterOptions = new HyperMediaFilterOptions();
+            filterOptions.ContentResponseEnricherList.Add(new ProdutoEnricher());
+
+            services.AddSingleton(filterOptions);
 
             return services;
         }
