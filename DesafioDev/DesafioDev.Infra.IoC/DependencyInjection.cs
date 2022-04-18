@@ -6,9 +6,13 @@ using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Notificacoes;
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.Data.Repository;
+using DesafioDev.Infra.Integration.MercadoPago;
+using DesafioDev.Infra.Integration.MercadoPago.Interfaces;
 using DesafioDev.Infra.InterfacesRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace DesafioDev.Infra.IoC
 {
@@ -34,6 +38,16 @@ namespace DesafioDev.Infra.IoC
             #endregion
 
             services.AddScoped<INotificador, Notificador>();
+
+            #region Policies
+            var retryPolicy = HttpPolicyExtensions
+                             .HandleTransientHttpError()
+                             .WaitAndRetryAsync(int.Parse(configuration["NumeroTentativas"]), retryAttempt => TimeSpan.FromSeconds(retryAttempt));
+            #endregion
+
+            #region Integrations Configuration            
+            services.AddScoped<IMercadoPagoGateway, MercadoPagoGateway>();
+            #endregion            
 
             var filterOptions = new HyperMediaFilterOptions();
             filterOptions.ContentResponseEnricherList.Add(new ProdutoEnricher());

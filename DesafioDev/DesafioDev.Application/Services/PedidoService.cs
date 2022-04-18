@@ -30,7 +30,10 @@ namespace DesafioDev.Application.Services
         public async Task<PedidoViewModelSaida> AdicionarItemPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada)
         {
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorUsuarioId(pedidoEntrada.UsuarioId);
-            var pedidoItem = new PedidoItem(pedidoEntrada.ProdutoId, pedidoEntrada.Nome, pedidoEntrada.Quantidade, pedidoEntrada.ValorUnitario);
+            var pedidoItem = new PedidoItem(pedidoEntrada.ProdutoId,
+                                            pedidoEntrada.Nome,
+                                            pedidoEntrada.Quantidade,
+                                            pedidoEntrada.ValorUnitario);
 
             if (pedido == null)
             {
@@ -47,7 +50,8 @@ namespace DesafioDev.Application.Services
                 pedido.AdicionarItem(pedidoItem);
 
                 if (pedidoItemExiste)
-                    await _pedidoItemRepository.Atualizar(pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId));
+                    await _pedidoItemRepository.Atualizar(
+                        pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId));
                 else
                     await _pedidoItemRepository.Adicionar(pedidoItem);
             }
