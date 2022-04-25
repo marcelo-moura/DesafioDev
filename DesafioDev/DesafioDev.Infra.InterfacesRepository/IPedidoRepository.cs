@@ -6,6 +6,7 @@ namespace DesafioDev.Infra.InterfacesRepository
     public interface IPedidoRepository : IRepositoryBase<Pedido>
     {
         Task<IEnumerable<Pedido>> ObterListaPorUsuarioId(Guid usuarioId);
+        Task<Pedido> ObterPedidoComItensPorId(Guid pedidoId);
         Task<Pedido> ObterPedidoRascunhoPorUsuarioId(Guid usuarioId);
     }
 }

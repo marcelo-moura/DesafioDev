@@ -4,10 +4,11 @@ namespace DesafioDev.Business.Models
 {
     public class Pagamento : Entity
     {
-        public Guid PedidoId { get; set; }
-        public decimal Valor { get; set; }
-        public int Parcelas { get; set; }
-        public string PaymentMethodId { get; set; }
-        public string TokenCard { get; set; }
+        public Guid PedidoId { get; private set; }
+        public Guid UsuarioId { get; private set; }
+        public decimal Valor { get; private set; }
+        public int Parcelas { get; private set; }
+        public string PaymentMethodId { get; private set; }
+        public string TokenCard { get; private set; }
     }
 }

@@ -18,11 +18,18 @@ namespace DesafioDev.Infra.Data.Repository
             return await Db.Pedidos.AsNoTracking().Where(p => p.UsuarioId == usuarioId).ToListAsync();
         }
 
+        public async Task<Pedido> ObterPedidoComItensPorId(Guid pedidoId)
+        {
+            return await Db.Pedidos.AsNoTracking()
+                                   .Include(p => p.PedidoItems)
+                                   .FirstOrDefaultAsync(p => p.Id == pedidoId);
+        }
+
         public async Task<Pedido> ObterPedidoRascunhoPorUsuarioId(Guid usuarioId)
         {
             var pedido = await Db.Pedidos
                 .FirstOrDefaultAsync(p => p.UsuarioId == usuarioId && p.PedidoStatus == EPedidoStatus.Rascunho);
-            
+
             if (pedido == null) return null;
 
             await Db.Entry(pedido)

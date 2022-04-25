@@ -74,7 +74,7 @@ namespace DesafioDev.Infra.Integration.MercadoPago
             return card;
         }
 
-        public async Task<Payment> CriarPagamento(Pagamento pagamento, List<PaymentItemRequest> paymentItems, PaymentPayerRequest payerRequest)
+        public async Task<Payment> CriarPagamento(Pagamento pagamento, List<PaymentItemRequest> paymentItems, Customer customer)
         {
             var paymentRequest = new PaymentCreateRequest
             {
@@ -88,14 +88,14 @@ namespace DesafioDev.Infra.Integration.MercadoPago
                 PaymentMethodId = pagamento.PaymentMethodId,
                 Payer = new PaymentPayerRequest
                 {
-                    Email = payerRequest.Email,
+                    Email = customer.Email,
                     Identification = new IdentificationRequest
                     {
-                        Type = payerRequest.Identification.Type,
-                        Number = payerRequest.Identification.Number
+                        Type = customer.Identification.Type,
+                        Number = customer.Identification.Number
                     },
-                    FirstName = payerRequest.FirstName,
-                    LastName = payerRequest.LastName
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName
                 }
             };
 
