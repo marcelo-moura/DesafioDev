@@ -20,8 +20,18 @@ namespace DesafioDev.Infra.Integration
 
         public async Task<Payment> RealizarPagamento(Usuario usuario, Pedido pedido, Pagamento pagamento)
         {
+            var paymentItems = PreencherPaymentItemsRequest(pedido.PedidoItems);
+
+            var paymentPayerRequest = await _mercadoPagoGateway.ObterDadosCliente(usuario.Login);
+            var paymentResponse = await _mercadoPagoGateway.CriarPagamento(pagamento, paymentItems, paymentPayerRequest);
+
+            return paymentResponse;
+        }
+
+        private List<PaymentItemRequest> PreencherPaymentItemsRequest(IReadOnlyCollection<PedidoItem> pedidoItems)
+        {
             var paymentItems = new List<PaymentItemRequest>();
-            foreach (var item in pedido.PedidoItems)
+            foreach (var item in pedidoItems)
             {
                 var paymentItem = new PaymentItemRequest
                 {
@@ -29,13 +39,10 @@ namespace DesafioDev.Infra.Integration
                     Quantity = item.Quantidade,
                     UnitPrice = item.ValorUnitario
                 };
+
                 paymentItems.Add(paymentItem);
             }
-
-            var paymentPayerRequest = await _mercadoPagoGateway.ObterDadosCliente(usuario.Login);
-            var paymentResponse = await _mercadoPagoGateway.CriarPagamento(pagamento, paymentItems, paymentPayerRequest);
-
-            return paymentResponse;
+            return paymentItems;
         }
     }
 }

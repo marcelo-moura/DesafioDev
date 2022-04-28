@@ -22,6 +22,7 @@ namespace DesafioDev.Infra.Data.Repository
         {
             return await Db.Pedidos.AsNoTracking()
                                    .Include(p => p.PedidoItems)
+                                   .ThenInclude(p => p.Produto)
                                    .FirstOrDefaultAsync(p => p.Id == pedidoId);
         }
 

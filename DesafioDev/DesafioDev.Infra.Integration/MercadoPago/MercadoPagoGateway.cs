@@ -1,7 +1,6 @@
 ﻿using DesafioDev.Business.Models;
 using DesafioDev.Infra.Integration.MercadoPago.Interfaces;
 using MercadoPago.Client;
-using MercadoPago.Client.Common;
 using MercadoPago.Client.Customer;
 using MercadoPago.Client.Payment;
 using MercadoPago.Config;
@@ -80,7 +79,12 @@ namespace DesafioDev.Infra.Integration.MercadoPago
             {
                 AdditionalInfo = new PaymentAdditionalInfoRequest
                 {
-                    Items = paymentItems
+                    Items = paymentItems,
+                    Payer = new PaymentAdditionalInfoPayerRequest
+                    {
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName
+                    }
                 },
                 TransactionAmount = pagamento.Valor,
                 Token = pagamento.TokenCard,
@@ -89,18 +93,13 @@ namespace DesafioDev.Infra.Integration.MercadoPago
                 Payer = new PaymentPayerRequest
                 {
                     Email = customer.Email,
-                    Identification = new IdentificationRequest
-                    {
-                        Type = customer.Identification.Type,
-                        Number = customer.Identification.Number
-                    },
-                    FirstName = customer.FirstName,
-                    LastName = customer.LastName
+                    Type = "customer"
                 }
             };
 
             var client = new PaymentClient();
             Payment payment = await client.CreateAsync(paymentRequest);
+
             return payment;
         }
     }

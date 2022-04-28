@@ -41,12 +41,17 @@ namespace DesafioDev.Application.Services
             var usuario = await _usuarioRepository.BuscarPor(u => u.Id == pagamentoEntrada.UsuarioId);
             var pedido = await _pedidoRepository.ObterPedidoComItensPorId(pagamentoEntrada.PedidoId);
 
-            pagamentoEntrada.TokenCard = _configuration["MercadoPagoAPI:TokenCardTest"];
             var pagamentoRequest = _mapper.Map<Pagamento>(pagamentoEntrada);
 
-            var pagamento = _pagamentoCartaoCreditoFacade.RealizarPagamento(usuario, pedido, pagamentoRequest);
+            var pagamento = await _pagamentoCartaoCreditoFacade.RealizarPagamento(usuario, pedido, pagamentoRequest);
 
-            return new PagamentoViewModelSaida();
+            return new PagamentoViewModelSaida
+            {
+                PagamentoId = pagamento.Id,
+                PedidoId = pedido.Id,
+                Total = pagamento.TransactionAmount,
+                Status = pagamento.Status
+            };
         }
     }
 }
