@@ -48,5 +48,6 @@ namespace DesafioDev.Infra.Data.Context
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoItem> PedidoItems { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
     }
 }

@@ -10,6 +10,7 @@
     <ProjectReference Include="..\DesafioDev.Business\DesafioDev.Business.csproj" />
     <ProjectReference Include="..\DesafioDev.Infra.Common\DesafioDev.Infra.Common.csproj" />
     <ProjectReference Include="..\DesafioDev.Infra.Data\DesafioDev.Infra.Data.csproj" />
+    <ProjectReference Include="..\DesafioDev.Infra.Integration\DesafioDev.Infra.Integration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

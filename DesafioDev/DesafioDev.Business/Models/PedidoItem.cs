@@ -10,7 +10,8 @@ namespace DesafioDev.Business.Models
         public int Quantidade { get; private set; }
         public decimal ValorUnitario { get; private set; }
 
-        public Pedido Pedido { get; set; }
+        public Pedido Pedido { get; private set; }
+        public Produto Produto { get; private set; }
 
         protected PedidoItem() { }
 
