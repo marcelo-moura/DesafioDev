@@ -8,5 +8,6 @@ namespace DesafioDev.Application.Interfaces
     public interface IPedidoService : IServiceBase<Pedido>
     {
         Task<PedidoViewModelSaida> AdicionarItemPedido(AdicionarItemPedidoViewModelEntrada pedidoEntrada);
+        Task<CarrinhoViewModelSaida> ObterCarrinhoCliente(Guid clienteId);
     }
 }

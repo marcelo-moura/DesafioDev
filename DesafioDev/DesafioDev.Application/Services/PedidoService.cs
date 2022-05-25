@@ -58,5 +58,32 @@ namespace DesafioDev.Application.Services
 
             return _mapper.Map<PedidoViewModelSaida>(pedido);
         }
+
+        public async Task<CarrinhoViewModelSaida> ObterCarrinhoCliente(Guid clienteId)
+        {
+            var pedido = await _pedidoRepository.ObterPedidoRascunhoPorUsuarioId(clienteId);
+            if (pedido == null) return null;
+
+            var carrinho = new CarrinhoViewModelSaida
+            {
+                UsuarioId = pedido.UsuarioId,
+                ValorTotal = pedido.ValorTotal,
+                PedidoId = pedido.Id
+            };
+
+            foreach (var item in pedido.PedidoItems)
+            {
+                carrinho.Items.Add(new CarrinhoItemViewModelSaida
+                {
+                    ProdutoId = item.ProdutoId,
+                    NomeProduto = item.NomeProduto,
+                    Quantidade = item.Quantidade,
+                    ValorUnitario = item.ValorUnitario,
+                    ValorTotal = item.ValorUnitario * item.Quantidade
+                });
+            }
+
+            return carrinho;
+        }
     }
 }
