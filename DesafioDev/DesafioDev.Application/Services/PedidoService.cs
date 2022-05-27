@@ -5,9 +5,13 @@ using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Enums;
 using DesafioDev.Business.Models;
+using DesafioDev.Core.Extensions;
 using DesafioDev.Core.Interfaces;
+using DesafioDev.Core.Messages.IntegrationEvents;
 using DesafioDev.Infra.Common.Utils;
+using DesafioDev.Infra.Integration.Interfaces;
 using DesafioDev.Infra.InterfacesRepository;
+using NerdStore.Core.DomainObjects.DTO;
 
 namespace DesafioDev.Application.Services
 {
@@ -15,15 +19,18 @@ namespace DesafioDev.Application.Services
     {
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IPedidoItemRepository _pedidoItemRepository;
+        private readonly IRabbitMQMessageSender _rabbitMQMessageSender;
         private readonly IMapper _mapper;
 
         public PedidoService(IPedidoRepository pedidoRepository,
                              IPedidoItemRepository pedidoItemRepository,
+                             IRabbitMQMessageSender rabbitMQMessageSender,
                              IMapper mapper,
                              INotificador notificador) : base(pedidoRepository, notificador)
         {
             _pedidoRepository = pedidoRepository;
             _pedidoItemRepository = pedidoItemRepository;
+            _rabbitMQMessageSender = rabbitMQMessageSender;
             _mapper = mapper;
         }
 
@@ -55,6 +62,29 @@ namespace DesafioDev.Application.Services
                 else
                     await _pedidoItemRepository.Adicionar(pedidoItem);
             }
+
+            return _mapper.Map<PedidoViewModelSaida>(pedido);
+        }
+
+        public async Task<PedidoViewModelSaida> IniciarPedido(CarrinhoViewModelEntrada carrinhoEntrada)
+        {
+            var pedido = await _pedidoRepository.ObterPedidoRascunhoPorUsuarioId(carrinhoEntrada.ClienteId);
+            pedido.SetStatusPedido(EPedidoStatus.Iniciado);
+
+            var itensList = new List<Item>();
+            pedido.PedidoItems.ForEach(i => itensList.Add(new Item { Id = i.ProdutoId, Quantidade = i.Quantidade }));
+            var listaProdutosPedido = new ListaProdutosPedido { PedidoId = pedido.Id, Itens = itensList };
+
+            var pedidoIniciadoEvent = new PedidoIniciadoEvent(carrinhoEntrada.PedidoId, carrinhoEntrada.ClienteId,
+                                                              carrinhoEntrada.ValorTotal, listaProdutosPedido,
+                                                              carrinhoEntrada.Pagamento.NomeCartao,
+                                                              carrinhoEntrada.Pagamento.NumeroCartao,
+                                                              carrinhoEntrada.Pagamento.ExpiracaoCartao,
+                                                              carrinhoEntrada.Pagamento.CvvCartao);
+
+            _rabbitMQMessageSender.SendMessage(pedidoIniciadoEvent, "iniciar-pedido-queue");
+
+            await _pedidoRepository.Atualizar(pedido);
 
             return _mapper.Map<PedidoViewModelSaida>(pedido);
         }

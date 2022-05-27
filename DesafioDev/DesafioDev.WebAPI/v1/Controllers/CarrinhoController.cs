@@ -47,12 +47,12 @@ namespace DesafioDev.WebAPI.v1.Controllers
         [Route("iniciar-pedido")]
         public async Task<IActionResult> IniciarPedido(CarrinhoViewModelEntrada carrinhoEntrada)
         {
-            if (carrinhoEntrada == null) return BadRequest();
+            if (carrinhoEntrada?.ClienteId == null) return BadRequest();
 
             var carrinho = await _pedidoService.ObterCarrinhoCliente(carrinhoEntrada.ClienteId);
             if (carrinho == null) return BadRequest();
 
-            return CustomResponse();
+            return CustomResponse(await _pedidoService.IniciarPedido(carrinhoEntrada));
         }
     }
 }

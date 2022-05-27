@@ -6,5 +6,6 @@
         public string NumeroCartao { get; set; }
         public string ExpiracaoCartao { get; set; }
         public string CvvCartao { get; set; }
+        public string TokenCard { get; set; }
     }
 }
