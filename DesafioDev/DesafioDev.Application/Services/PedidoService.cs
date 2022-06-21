@@ -72,15 +72,25 @@ namespace DesafioDev.Application.Services
             pedido.SetStatusPedido(EPedidoStatus.Iniciado);
 
             var itensList = new List<Item>();
-            pedido.PedidoItems.ForEach(i => itensList.Add(new Item { Id = i.ProdutoId, Quantidade = i.Quantidade }));
+            pedido.PedidoItems.ForEach(i => itensList.Add(new Item
+            {
+                Id = i.ProdutoId,
+                Quantidade = i.Quantidade,
+                ValorUnitario = i.ValorUnitario
+            }));
+
             var listaProdutosPedido = new ListaProdutosPedido { PedidoId = pedido.Id, Itens = itensList };
 
             var pedidoIniciadoEvent = new PedidoIniciadoEvent(carrinhoEntrada.PedidoId, carrinhoEntrada.ClienteId,
+                                                              carrinhoEntrada.ClienteLogin,
                                                               carrinhoEntrada.ValorTotal, listaProdutosPedido,
                                                               carrinhoEntrada.Pagamento.NomeCartao,
                                                               carrinhoEntrada.Pagamento.NumeroCartao,
                                                               carrinhoEntrada.Pagamento.ExpiracaoCartao,
-                                                              carrinhoEntrada.Pagamento.CvvCartao);
+                                                              carrinhoEntrada.Pagamento.CvvCartao,
+                                                              carrinhoEntrada.Pagamento.Parcelas,
+                                                              carrinhoEntrada.Pagamento.TokenCard,
+                                                              carrinhoEntrada.Pagamento.PaymentMethodId);
 
             _rabbitMQMessageSender.SendMessage(pedidoIniciadoEvent, "iniciar-pedido-queue");
 

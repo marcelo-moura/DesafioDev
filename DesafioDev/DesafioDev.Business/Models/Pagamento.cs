@@ -9,5 +9,14 @@ namespace DesafioDev.Business.Models
         public int Parcelas { get; private set; }
         public string PaymentMethodId { get; private set; }
         public string TokenCard { get; private set; }
+
+        public Pagamento(Guid pedidoId, decimal valor, int parcelas, string paymentMethodId, string tokenCard)
+        {
+            PedidoId = pedidoId;
+            Valor = valor;
+            Parcelas = parcelas;
+            PaymentMethodId = paymentMethodId;
+            TokenCard = tokenCard;
+        }
     }
 }

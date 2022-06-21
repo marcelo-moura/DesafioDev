@@ -7,6 +7,6 @@ namespace DesafioDev.Application.Interfaces
 {
     public interface IPagamentoService : IServiceBase<Pagamento>
     {
-        Task<PagamentoViewModelSaida> RealizarPagamentoPedido(PagamentoViewModelEntrada pagamentoEntrada);
+        Task<PagamentoViewModelSaida> RealizarPagamentoPedido();
     }
 }

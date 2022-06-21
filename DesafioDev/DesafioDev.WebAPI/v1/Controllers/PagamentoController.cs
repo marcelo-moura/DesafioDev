@@ -1,5 +1,4 @@
 ﻿using DesafioDev.Application.Interfaces;
-using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.WebAPI.Controllers.Base;
@@ -14,6 +13,7 @@ namespace DesafioDev.WebAPI.v1.Controllers
     public class PagamentoController : BaseController
     {
         private readonly IPagamentoService _pagamentoService;
+
         public PagamentoController(INotificador notificador,
                                    IPagamentoService pagamentoService) : base(notificador)
         {
@@ -21,9 +21,9 @@ namespace DesafioDev.WebAPI.v1.Controllers
         }
 
         [HttpPost]
-        public async Task<PagamentoViewModelSaida> RealizarPagamento(PagamentoViewModelEntrada pagamentoEntrada)
+        public async Task<PagamentoViewModelSaida> RealizarPagamento()
         {
-            return await _pagamentoService.RealizarPagamentoPedido(pagamentoEntrada);
+            return await _pagamentoService.RealizarPagamentoPedido();
         }
     }
 }

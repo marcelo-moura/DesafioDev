@@ -25,24 +25,19 @@ namespace DesafioDev.Infra.Integration.RabbitMQSender
 
         public void SendMessage<T>(T message, string queueName) where T : BaseMessage
         {
-            var factory = new ConnectionFactory
+            if (ConnectionExists())
             {
-                HostName = _hostName,
-                UserName = _userName,
-                Password = _password
-            };
-            _connection = factory.CreateConnection();
+                using var channel = _connection.CreateModel();
 
-            using var channel = _connection.CreateModel();
+                channel.QueueDeclare(queue: queueName, false, false, false, arguments: null);
 
-            channel.QueueDeclare(queue: queueName, false, false, false, arguments: null);
+                var body = GetMessageAsByteArray(message);
 
-            var body = GetMessageAsByteArray(message);
-
-            channel.BasicPublish(exchange: "",
-                                 routingKey: queueName,
-                                 basicProperties: null,
-                                 body: body);
+                channel.BasicPublish(exchange: "",
+                                     routingKey: queueName,
+                                     basicProperties: null,
+                                     body: body);
+            }
         }
 
         private byte[] GetMessageAsByteArray<T>(T message)
@@ -55,6 +50,31 @@ namespace DesafioDev.Infra.Integration.RabbitMQSender
             var json = JsonSerializer.Serialize<T>(message, options);
             var body = Encoding.UTF8.GetBytes(json);
             return body;
+        }
+
+        private void CreateConnection()
+        {
+            try
+            {
+                var factory = new ConnectionFactory
+                {
+                    HostName = _hostName,
+                    UserName = _userName,
+                    Password = _password
+                };
+                _connection = factory.CreateConnection();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private bool ConnectionExists()
+        {
+            if (_connection != null) return true;
+            CreateConnection();
+            return _connection != null;
         }
     }
 }

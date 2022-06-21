@@ -54,6 +54,7 @@ namespace DesafioDev.Infra.IoC
             services.AddScoped<IMercadoPagoGateway, MercadoPagoGateway>();
             services.AddScoped<IPagamentoCartaoCreditoFacade, PagamentoCartaoCreditoFacade>();
             services.AddScoped<IRabbitMQMessageSender, RabbitMQMessageSender>();
+            services.AddScoped<IRabbitMQMessageConsumer, RabbitMQMessageConsumer>();
             #endregion            
 
             var filterOptions = new HyperMediaFilterOptions();
