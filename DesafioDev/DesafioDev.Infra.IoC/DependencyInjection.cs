@@ -10,6 +10,7 @@ using DesafioDev.Infra.Integration;
 using DesafioDev.Infra.Integration.Interfaces;
 using DesafioDev.Infra.Integration.MercadoPago;
 using DesafioDev.Infra.Integration.MercadoPago.Interfaces;
+using DesafioDev.Infra.Integration.RabbitMQSender;
 using DesafioDev.Infra.InterfacesRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,8 @@ namespace DesafioDev.Infra.IoC
             #region Integrations Configuration            
             services.AddScoped<IMercadoPagoGateway, MercadoPagoGateway>();
             services.AddScoped<IPagamentoCartaoCreditoFacade, PagamentoCartaoCreditoFacade>();
+            services.AddScoped<IRabbitMQMessageSender, RabbitMQMessageSender>();
+            services.AddScoped<IRabbitMQMessageConsumer, RabbitMQMessageConsumer>();
             #endregion            
 
             var filterOptions = new HyperMediaFilterOptions();
