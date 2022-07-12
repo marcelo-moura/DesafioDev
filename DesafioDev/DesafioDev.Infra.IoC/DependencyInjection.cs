@@ -10,7 +10,7 @@ using DesafioDev.Infra.Integration;
 using DesafioDev.Infra.Integration.Interfaces;
 using DesafioDev.Infra.Integration.MercadoPago;
 using DesafioDev.Infra.Integration.MercadoPago.Interfaces;
-using DesafioDev.Infra.Integration.RabbitMQSender;
+using DesafioDev.Infra.Integration.RabbitMQ;
 using DesafioDev.Infra.InterfacesRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -4,17 +4,14 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
-namespace DesafioDev.Infra.Integration.RabbitMQSender
+namespace DesafioDev.Infra.Integration.RabbitMQ
 {
-    public class RabbitMQMessageConsumer : IRabbitMQMessageConsumer
+    public class RabbitMQMessageConsumer : BaseRabbitMQ, IRabbitMQMessageConsumer
     {
-        private IConnection _connection;
         private IModel _channel;
-        private readonly IConfiguration _configuration;
 
-        public RabbitMQMessageConsumer(IConfiguration configuration)
+        public RabbitMQMessageConsumer(IConfiguration configuration) : base(configuration)
         {
-            _configuration = configuration;
         }
 
         public async Task<string> ReceiveMessage(string queueName)
@@ -36,24 +33,6 @@ namespace DesafioDev.Infra.Integration.RabbitMQSender
                 _channel.BasicConsume(queueName, true, consumer);
             }
             return await Task.FromResult(content);
-        }
-
-        private void CreateConnection()
-        {
-            var factory = new ConnectionFactory
-            {
-                HostName = _configuration["RabbitMQ:HostName"],
-                Password = _configuration["RabbitMQ:Password"],
-                UserName = _configuration["RabbitMQ:Username"],
-            };
-            _connection = factory.CreateConnection();
-        }
-
-        private bool ConnectionExists()
-        {
-            if (_connection != null) return true;
-            CreateConnection();
-            return _connection != null;
         }
     }
 }
