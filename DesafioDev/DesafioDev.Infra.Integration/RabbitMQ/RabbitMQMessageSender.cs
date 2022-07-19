@@ -30,6 +30,23 @@ namespace DesafioDev.Infra.Integration.RabbitMQ
             }
         }
 
+        public void SendExchangeMessage<T>(T message, string exchangeName) where T : BaseMessage
+        {
+            if (ConnectionExists())
+            {
+                using var channel = _connection.CreateModel();
+
+                channel.ExchangeDeclare(exchangeName, ExchangeType.Fanout, durable: false);
+
+                var body = GetMessageAsByteArray(message);
+
+                channel.BasicPublish(exchange: exchangeName,
+                                     routingKey: "",   
+                                     basicProperties: null,
+                                     body: body);
+            }
+        }
+
         private byte[] GetMessageAsByteArray<T>(T message)
         {
             var options = new JsonSerializerOptions
