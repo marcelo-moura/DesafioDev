@@ -2,9 +2,11 @@
 using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.Services.Base;
 using DesafioDev.Application.ViewModels.Saida;
+using DesafioDev.Business.Enums;
 using DesafioDev.Business.Models;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Messages.IntegrationEvents;
+using DesafioDev.Infra.Common.Utils;
 using DesafioDev.Infra.Integration.Interfaces;
 using DesafioDev.Infra.InterfacesRepository;
 using Microsoft.Extensions.Configuration;
@@ -41,21 +43,30 @@ namespace DesafioDev.Application.Services
             var pedido = JsonSerializer.Deserialize<PedidoIniciadoReceive>(pedidoMessage);
 
             var pagamentoRequest = PreencherDadosPagamentoRequest(pedido);
+            pagamentoRequest.SetPaymentMethodId(pedido.PaymentMethodId);
+            pagamentoRequest.SetTokenCard(pedido.TokenCard);
 
-            var pagamento = await _pagamentoCartaoCreditoFacade.RealizarPagamento(pedido, pagamentoRequest);
+            var transacao = await _pagamentoCartaoCreditoFacade.RealizarPagamento(pedido, pagamentoRequest);
+
+            if (transacao.StatusTransacao == EStatusTransacao.Pago)
+            {
+                await _pagamentoRepository.Adicionar(pagamentoRequest);
+                await _pagamentoRepository.AdicionarTransacao(transacao);
+            }
 
             return new PagamentoViewModelSaida
             {
-                PagamentoId = pagamento.Id,
-                PedidoId = pedido.PedidoId,
-                Total = pagamento.TransactionAmount,
-                Status = pagamento.Status
+                PagamentoId = transacao.PagamentoId,
+                PedidoId = transacao.PedidoId,
+                Total = transacao.Total,
+                Status = transacao.StatusTransacao.GetDescription()
             };
         }
 
         private Pagamento PreencherDadosPagamentoRequest(PedidoIniciadoReceive? pedido)
         {
-            return new Pagamento(pedido.PedidoId, pedido.Total, pedido.Parcelas, pedido.PaymentMethodId, pedido.TokenCard);
+            return new Pagamento(pedido.PedidoId, pedido.Total, pedido.Parcelas, pedido.NomeCartao,
+                                 pedido.NumeroCartao, pedido.ExpiracaoCartao, pedido.CvvCartao);
         }
     }
 }
