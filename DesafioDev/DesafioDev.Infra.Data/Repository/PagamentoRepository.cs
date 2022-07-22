@@ -2,7 +2,6 @@
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.Data.Repository.Base;
 using DesafioDev.Infra.InterfacesRepository;
-using Microsoft.EntityFrameworkCore;
 
 namespace DesafioDev.Infra.Data.Repository
 {
@@ -10,6 +9,12 @@ namespace DesafioDev.Infra.Data.Repository
     {
         public PagamentoRepository(DesafioDevContext context) : base(context)
         {
-        }       
+        }
+
+        public async Task<bool> AdicionarTransacao(Transacao transacao)
+        {
+            await Db.Transacoes.AddAsync(transacao);
+            return await Db.SaveChangesAsync() > 0;
+        }
     }
 }

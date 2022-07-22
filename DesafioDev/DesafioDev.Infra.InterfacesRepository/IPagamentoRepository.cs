@@ -5,5 +5,6 @@ namespace DesafioDev.Infra.InterfacesRepository
 {
     public interface IPagamentoRepository : IRepositoryBase<Pagamento>
     {
+        Task<bool> AdicionarTransacao(Transacao transacao);
     }
 }
