@@ -18,12 +18,14 @@ namespace DesafioDev.Application.Services
     {
         private readonly IPagamentoRepository _pagamentoRepository;
         private readonly IPagamentoCartaoCreditoFacade _pagamentoCartaoCreditoFacade;
+        private readonly IRabbitMQMessageSender _rabbitMQMessageSender;
         private readonly IRabbitMQMessageConsumer _rabbitMQMessageConsumer;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
         public PagamentoService(IPagamentoRepository pagamentoRepository,
                                 IPagamentoCartaoCreditoFacade pagamentoCartaoCreditoFacade,
+                                IRabbitMQMessageSender rabbitMQMessageSender,
                                 IRabbitMQMessageConsumer rabbitMQMessageConsumer,
                                 IMapper mapper,
                                 IConfiguration configuration,
@@ -31,6 +33,7 @@ namespace DesafioDev.Application.Services
         {
             _pagamentoRepository = pagamentoRepository;
             _pagamentoCartaoCreditoFacade = pagamentoCartaoCreditoFacade;
+            _rabbitMQMessageSender = rabbitMQMessageSender;
             _rabbitMQMessageConsumer = rabbitMQMessageConsumer;
             _mapper = mapper;
             _configuration = configuration;
@@ -50,6 +53,9 @@ namespace DesafioDev.Application.Services
 
             if (transacao.StatusTransacao == EStatusTransacao.Pago)
             {
+                var pagamentoRealizadoMessage = new PedidoPagamentoRealizadoEvent(pedido.PedidoId, pedido.ClienteId, pedido.ClienteLogin, transacao.PagamentoId, transacao.Id, (int)transacao.StatusTransacao, transacao.Total);
+                _rabbitMQMessageSender.SendExchangeMessage(pagamentoRealizadoMessage, "FanoutPaymentUpdateExchange");
+
                 await _pagamentoRepository.Adicionar(pagamentoRequest);
                 await _pagamentoRepository.AdicionarTransacao(transacao);
             }
