@@ -53,8 +53,14 @@ namespace DesafioDev.Application.Services
 
             if (transacao.StatusTransacao == EStatusTransacao.Pago)
             {
-                var pagamentoRealizadoMessage = new PedidoPagamentoRealizadoEvent(pedido.PedidoId, pedido.ClienteId, pedido.ClienteLogin, transacao.PagamentoId, transacao.Id, (int)transacao.StatusTransacao, transacao.Total);
-                _rabbitMQMessageSender.SendExchangeMessage(pagamentoRealizadoMessage, "FanoutPaymentUpdateExchange");
+                var queueNameRoutingKey = new Dictionary<string, string>();
+                queueNameRoutingKey.Add("atualizar-pagamento-email-queue", "AtualizarPagamentoEmail");
+
+                var pagamentoRealizadoMessage = new PedidoPagamentoRealizadoEvent(pedido.PedidoId, pedido.ClienteId, pedido.ClienteLogin,
+                                                                                  transacao.PagamentoId, transacao.Id,
+                                                                                  (int)transacao.StatusTransacao, transacao.Total);
+
+                _rabbitMQMessageSender.SendDirectExchangeMessage(pagamentoRealizadoMessage, "DirectAtualizarPagamentoExchange", queueNameRoutingKey);
 
                 await _pagamentoRepository.Adicionar(pagamentoRequest);
                 await _pagamentoRepository.AdicionarTransacao(transacao);

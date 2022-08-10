@@ -23,7 +23,9 @@ build.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"
 builder.Services.AddSingleton(new EmailLogRepository(build.Options));
 builder.Services.AddScoped<IEmailLogRepository, EmailLogRepository>();
 
-builder.Services.AddHostedService<RabbitMQPaymentMessageConsumer>();
+//builder.Services.AddHostedService<RabbitMQPaymentMessageConsumerFanout>();
+builder.Services.AddHostedService<RabbitMQPedidoIniciadoMessageConsumerDirect>();
+builder.Services.AddHostedService<RabbitMQAtualizarPagamentoMessageConsumerDirect>();
 
 var app = builder.Build();
 

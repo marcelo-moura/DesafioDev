@@ -1,6 +1,7 @@
 ﻿using DesafioDev.Email.InterfacesRepository;
 using DesafioDev.Email.Messages.IntegrationEvents;
 using DesafioDev.Email.Models;
+using DesafioDev.Email.Utils;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -8,15 +9,16 @@ using System.Text.Json;
 
 namespace DesafioDev.Email.RabbitMQ
 {
-    public class RabbitMQPaymentMessageConsumer : BackgroundService
+    public class RabbitMQAtualizarPagamentoMessageConsumerDirect : BackgroundService
     {
         private readonly IServiceProvider _service;
         private IConnection _connection;
         private IModel _channel;
-        private const string ExchangeName = "FanoutPaymentUpdateExchange";
-        string queueName = "";
+        private const string ExchangeName = "DirectAtualizarPagamentoExchange";
+        private const string AtualizarPagamentoEmailQueueName = "atualizar-pagamento-email-queue";
+        private const string AtualizarPagamentoEmailRoutingKey = "AtualizarPagamentoEmail";
 
-        public RabbitMQPaymentMessageConsumer(IServiceProvider service, IConfiguration configuration)
+        public RabbitMQAtualizarPagamentoMessageConsumerDirect(IServiceProvider service, IConfiguration configuration)
         {
             _service = service;
             var factory = new ConnectionFactory
@@ -28,9 +30,9 @@ namespace DesafioDev.Email.RabbitMQ
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
-            _channel.ExchangeDeclare(ExchangeName, ExchangeType.Fanout);
-            queueName = _channel.QueueDeclare().QueueName;
-            _channel.QueueBind(queueName, ExchangeName, "");
+            _channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct);
+            _channel.QueueDeclare(AtualizarPagamentoEmailQueueName, false, false, false, null);
+            _channel.QueueBind(AtualizarPagamentoEmailQueueName, ExchangeName, AtualizarPagamentoEmailRoutingKey);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -46,7 +48,7 @@ namespace DesafioDev.Email.RabbitMQ
                 ProcessarEmailLogs(message).GetAwaiter().GetResult();
                 _channel.BasicAck(evt.DeliveryTag, false);
             };
-            _channel.BasicConsume(queueName, true, consumer);
+            _channel.BasicConsume(AtualizarPagamentoEmailQueueName, true, consumer);
             return Task.CompletedTask;
         }
 
@@ -54,7 +56,7 @@ namespace DesafioDev.Email.RabbitMQ
         {
             try
             {
-                var email = new EmailLog(message.Email, $"Pedido - {message.PedidoId} criado com sucesso");
+                var email = new EmailLog(message.Email, $"Pedido - {message.PedidoId} {message.StatusTransacao.GetDescription()}");
 
                 using (var scope = _service.CreateScope())
                 {
