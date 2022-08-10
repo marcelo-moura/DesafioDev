@@ -92,7 +92,13 @@ namespace DesafioDev.Application.Services
                                                               carrinhoEntrada.Pagamento.TokenCard,
                                                               carrinhoEntrada.Pagamento.PaymentMethodId);
 
-            _rabbitMQMessageSender.SendMessage(pedidoIniciadoEvent, "iniciar-pedido-queue");
+            //_rabbitMQMessageSender.SendMessage(pedidoIniciadoEvent, "iniciar-pedido-queue");
+
+            var queueNameRoutingKey = new Dictionary<string, string>();
+            queueNameRoutingKey.Add("iniciar-pedido-queue", "IniciarPedido");
+            queueNameRoutingKey.Add("iniciar-pedido-email-queue", "IniciarPedidoEmail");
+
+            _rabbitMQMessageSender.SendDirectExchangeMessage(pedidoIniciadoEvent, "DirectIniciarPedidoExchange", queueNameRoutingKey);
 
             await _pedidoRepository.Atualizar(pedido);
 

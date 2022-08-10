@@ -30,7 +30,7 @@ namespace DesafioDev.Infra.Integration.RabbitMQ
             }
         }
 
-        public void SendExchangeMessage<T>(T message, string exchangeName) where T : BaseMessage
+        public void SendFanoutExchangeMessage<T>(T message, string exchangeName) where T : BaseMessage
         {
             if (ConnectionExists())
             {
@@ -41,9 +41,31 @@ namespace DesafioDev.Infra.Integration.RabbitMQ
                 var body = GetMessageAsByteArray(message);
 
                 channel.BasicPublish(exchange: exchangeName,
-                                     routingKey: "",   
+                                     routingKey: "",
                                      basicProperties: null,
                                      body: body);
+            }
+        }
+
+        public void SendDirectExchangeMessage<T>(T message, string exchangeName, Dictionary<string, string> queueNameRoutingKey) where T : BaseMessage
+        {
+            if (ConnectionExists())
+            {
+                using var channel = _connection.CreateModel();
+                channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, durable: false);
+
+                var body = GetMessageAsByteArray(message);
+
+                foreach (var queueRoutingKey in queueNameRoutingKey)
+                {
+                    channel.QueueDeclare(queueRoutingKey.Key, false, false, false, null);
+                    channel.QueueBind(queueRoutingKey.Key, exchangeName, queueRoutingKey.Value);
+
+                    channel.BasicPublish(exchange: exchangeName,
+                                         routingKey: queueRoutingKey.Value,
+                                         basicProperties: null,
+                                         body: body);
+                };
             }
         }
 
