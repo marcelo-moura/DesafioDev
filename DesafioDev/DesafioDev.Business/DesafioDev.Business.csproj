@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DesafioDev.Core\DesafioDev.Core.csproj" />
+    <ProjectReference Include="..\DesafioDev.Infra.Common\DesafioDev.Infra.Common.csproj" />
   </ItemGroup>
 
 </Project>

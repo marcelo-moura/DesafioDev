@@ -1,4 +1,6 @@
 ﻿using DesafioDev.Business.Models.Base;
+using DesafioDev.Core.DomainObjects;
+using DesafioDev.Infra.Common.Utils;
 
 namespace DesafioDev.Business.Models
 {
@@ -17,6 +19,8 @@ namespace DesafioDev.Business.Models
 
         public PedidoItem(Guid produtoId, string nomeProduto, int quantidade, decimal valorUnitario)
         {
+            if (quantidade < Constantes.MIN_UNIDADES_ITEM) throw new DomainException($"Mínimo de {Constantes.MIN_UNIDADES_ITEM} unidades por produto");
+
             ProdutoId = produtoId;
             NomeProduto = nomeProduto;
             Quantidade = quantidade;
