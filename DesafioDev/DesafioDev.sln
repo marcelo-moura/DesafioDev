@@ -43,6 +43,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesafioDev.Email", "Desafio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{E78F31D3-2830-4E51-B3CB-2F8E8FBA7431}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{83C92196-D2F8-4D5C-8BFD-B501E6D9725B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesafioDev.Domain.Tests", "..\tests\DesafioDev.Domain.Tests\DesafioDev.Domain.Tests.csproj", "{38599475-2B52-4585-98D9-147232D9E81F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +97,10 @@ Global
 		{889C1A8D-4562-4C5A-B828-B8A041147D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{889C1A8D-4562-4C5A-B828-B8A041147D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{889C1A8D-4562-4C5A-B828-B8A041147D04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38599475-2B52-4585-98D9-147232D9E81F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38599475-2B52-4585-98D9-147232D9E81F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38599475-2B52-4585-98D9-147232D9E81F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38599475-2B52-4585-98D9-147232D9E81F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +121,7 @@ Global
 		{A26723CD-1873-4B3F-89FC-00E4A3B90BE6} = {46DA72F6-06CD-4535-B331-45DC69A36809}
 		{F87C72F2-9106-47F9-A483-C1BD04678A34} = {E989A122-F9E3-46E3-97FD-38CA2AA120AB}
 		{889C1A8D-4562-4C5A-B828-B8A041147D04} = {E78F31D3-2830-4E51-B3CB-2F8E8FBA7431}
+		{38599475-2B52-4585-98D9-147232D9E81F} = {83C92196-D2F8-4D5C-8BFD-B501E6D9725B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4451FA15-A032-4576-8786-62D4A781BB6E}
