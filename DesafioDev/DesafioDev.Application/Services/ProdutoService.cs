@@ -6,6 +6,7 @@ using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Models;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Utils;
+using DesafioDev.Infra.Globalization;
 using DesafioDev.Infra.InterfacesRepository;
 
 namespace DesafioDev.Application.Services
@@ -47,22 +48,26 @@ namespace DesafioDev.Application.Services
             return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Preco == preco));
         }
 
-        public async Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(string name, string sortDirection, int pageSize, int page)
+        public async Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(string name, int page, int pageSize, int sortOrder, string sortDirection)
         {
-            var sort = (!string.IsNullOrWhiteSpace(sortDirection) && !sortDirection.Equals("desc")) ? "asc" : "desc";
-            var size = pageSize < 1 ? 10 : pageSize;
-            var offset = page > 0 ? (page - 1) * size : 0;
+            var produtos = await _produtoRepository.BuscarComPagedSearch("sp_ListarProdutos", sortOrder, sortDirection);
 
-            var produtos = await _produtoRepository.BuscarComPagedSearch("sp_ListarProdutos", name, sort, offset, size);
-            int totalResults = await _produtoRepository.GetCountName(name);
+            if (!string.IsNullOrEmpty(name))
+                produtos = produtos.Where(p => p.Nome.Contains(name)).ToList();
+
+            if (!produtos.Any())
+            {
+                Notificar(TextoGeral.NenhumRegistroEncontrado);
+                return new PagedSearchViewModel<ProdutoViewModelSaida>();
+            }            
 
             return new PagedSearchViewModel<ProdutoViewModelSaida>
             {
                 CurrentPage = page,
                 ListObject = _mapper.Map<List<ProdutoViewModelSaida>>(produtos),
-                PageSize = size,
-                SortDirections = sort,
-                TotalResults = totalResults,
+                PageSize = pageSize,
+                SortDirections = sortDirection,
+                TotalResults = produtos.Count,
             };
         }
 
