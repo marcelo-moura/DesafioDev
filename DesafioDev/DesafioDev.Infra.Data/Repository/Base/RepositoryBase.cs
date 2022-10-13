@@ -55,9 +55,9 @@ namespace DesafioDev.Infra.Data.Repository.Base
             return await DbSet.AsNoTracking().Where(predicate).FirstOrDefaultAsync();
         }
 
-        public virtual async Task<IList<TEntity>> BuscarComPagedSearch(string nameProcedure, string pesquisa, string sort, int offset, int size)
+        public virtual async Task<IList<TEntity>> BuscarComPagedSearch(string nameProcedure, int sortOrder, string sortDirection)
         {
-            return await DbSet.FromSqlInterpolated<TEntity>($"{nameProcedure} {pesquisa}, {sort}, {offset}, {size}").ToListAsync();
+            return await DbSet.FromSqlInterpolated<TEntity>($"{nameProcedure} {sortOrder}, {sortDirection}").ToListAsync();
         }
 
         public async Task<bool> ExisteRegistro(Expression<Func<TEntity, bool>> predicate)

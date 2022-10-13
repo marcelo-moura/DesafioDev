@@ -2,6 +2,7 @@
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.Data.Repository.Base;
 using DesafioDev.Infra.InterfacesRepository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DesafioDev.Infra.Data.Repository
@@ -10,11 +11,6 @@ namespace DesafioDev.Infra.Data.Repository
     {
         public ProdutoRepository(DesafioDevContext context) : base(context)
         {
-        }
-
-        public override Task<IList<Produto>> BuscarComPagedSearch(string nameProcedure, string pesquisa, string sort, int offset, int size)
-        {
-            return base.BuscarComPagedSearch(nameProcedure, pesquisa, sort, offset, size);
         }
 
         public async Task<int> GetCountName(string pesquisa)

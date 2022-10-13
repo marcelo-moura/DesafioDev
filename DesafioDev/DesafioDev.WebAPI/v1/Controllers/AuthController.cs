@@ -4,6 +4,7 @@ using DesafioDev.Core.Interfaces;
 using DesafioDev.WebAPI.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace DesafioDev.WebAPI.v1.Controllers
 {
@@ -24,11 +25,9 @@ namespace DesafioDev.WebAPI.v1.Controllers
         [Route("signIn")]
         public async Task<IActionResult> SingIn([FromBody] LoginViewModelEntrada loginEntrada)
         {
-            if (loginEntrada == null) return BadRequest("Invalid user request!");
+            if (!ModelState.IsValid) CustomResponse(ModelState);
 
             var token = await _tokenService.ValidateCredentials(loginEntrada);
-            if (token == null) return Unauthorized();
-
             return CustomResponse(token);
         }
 
@@ -37,23 +36,18 @@ namespace DesafioDev.WebAPI.v1.Controllers
         [Route("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenViewModelEntrada tokenEntrada)
         {
-            if (tokenEntrada is null) return BadRequest("Invalid user request!");
+            if (!ModelState.IsValid) CustomResponse(ModelState);
 
             var token = await _tokenService.ValidateCredentials(tokenEntrada);
-            if (token == null) return BadRequest("Invalid user request!");
-
             return CustomResponse(token);
         }
 
-        [HttpGet]        
+        [HttpGet]
         [Route("revoke")]
         public async Task<IActionResult> Revoke()
         {
-            var login = User?.Identity?.Name;
+            var login = User?.Claims?.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).FirstOrDefault();
             var result = await _tokenService.RevokeToken(login);
-
-            if (!result) return BadRequest("Invalid client request!");
-
             return CustomResponse(result);
         }
     }

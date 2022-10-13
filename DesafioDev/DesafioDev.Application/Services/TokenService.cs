@@ -4,6 +4,9 @@ using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Models;
 using DesafioDev.Core.DomainObjects;
+using DesafioDev.Core.Interfaces;
+using DesafioDev.Core.Notificacoes;
+using DesafioDev.Infra.Globalization;
 using DesafioDev.Infra.InterfacesRepository;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -20,29 +23,42 @@ namespace DesafioDev.Application.Services
         private TokenConfiguration _tokenConfiguration;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
+        private readonly INotificador _notificador;
 
         public TokenService(IOptions<TokenConfiguration> tokenConfiguration,
                             IUsuarioRepository usuarioRepository,
-                            IMapper mapper)
+                            IMapper mapper,
+                            INotificador notificador)
         {
             _tokenConfiguration = tokenConfiguration.Value;
             _usuarioRepository = usuarioRepository;
             _mapper = mapper;
+            _notificador = notificador;
         }
 
         public async Task<TokenViewModelSaida> ValidateCredentials(LoginViewModelEntrada loginEntrada)
         {
             var usuario = await _usuarioRepository.BuscarPor(u => u.Login == loginEntrada.Login);
-            if (usuario == null) return null;
+            if (usuario == null)
+            {
+                _notificador.Handle(new Notificacao(TextoGeral.NenhumRegistroEncontrado));
+                return null;
+            }
 
             var pass = ComputeHash(loginEntrada.Senha, new SHA256CryptoServiceProvider());
 
-            if (usuario.Senha != pass) return null;
+            if (usuario.Senha != pass)
+            {
+                _notificador.Handle(new Notificacao(TextoGeral.UsuarioSenhaInvalidos));
+                return null;
+            }
 
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                new Claim(JwtRegisteredClaimNames.UniqueName, usuario.Login)
+                new Claim(JwtRegisteredClaimNames.UniqueName, usuario.NomeCompleto),
+                new Claim(JwtRegisteredClaimNames.Email, usuario.Login),
+                new Claim(JwtRegisteredClaimNames.Sub, usuario.Codigo)
             };
 
             var accessToken = await GenerateAccessToken(claims);
@@ -73,11 +89,14 @@ namespace DesafioDev.Application.Services
 
             var principal = await GetPrincipalFromExpiredToken(accessToken);
 
-            var login = principal?.Identity?.Name;
+            var login = principal?.Claims?.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).FirstOrDefault();
             var user = await _usuarioRepository.BuscarPor(u => u.Login == login);
 
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                _notificador.Handle(new Notificacao(TextoGeral.RequestInvalid));
                 return null;
+            }
 
             accessToken = await GenerateAccessToken(principal.Claims);
             refreshToken = await GenerateRefreshToken();
@@ -104,7 +123,11 @@ namespace DesafioDev.Application.Services
         {
             var user = await _usuarioRepository.BuscarPor(u => u.Login == login);
 
-            if (user == null) return false;
+            if (user == null)
+            {
+                _notificador.Handle(new Notificacao(TextoGeral.NenhumRegistroEncontrado));
+                return false;
+            }
 
             user.SetRefreshToken(null);
             await _usuarioRepository.Atualizar(user);
