@@ -123,4 +123,10 @@
   <data name="NenhumRegistroEncontrado" xml:space="preserve">
     <value>Nenhum registro encontrado!</value>
   </data>
+  <data name="RequestInvalid" xml:space="preserve">
+    <value>Invalid user request!</value>
+  </data>
+  <data name="UsuarioSenhaInvalidos" xml:space="preserve">
+    <value>Usuário ou Senha inválidos. Tente novamente.</value>
+  </data>
 </root>

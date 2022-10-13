@@ -24,7 +24,7 @@ namespace DesafioDev.WebAPI.v1.Controllers
         [TypeFilter(typeof(HyperMediaFilter))]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _produtoService.FindAll());
+            return CustomResponse(await _produtoService.FindAll());
         }
 
         [HttpGet("{id}")]
@@ -60,26 +60,25 @@ namespace DesafioDev.WebAPI.v1.Controllers
             return CustomResponse(produtos);
         }
 
-        [HttpGet("{sortOrder}/{sortDirection}/{pageSize}/{page}")]
+        [HttpGet("{page}/{pageSize}/{sortOrder}/{sortDirection}")]
         [TypeFilter(typeof(HyperMediaFilter))]
         public async Task<IActionResult> GetPagedSearch([FromQuery] string name, int page = 1, int pageSize = 20, int sortOrder = 1, string sortDirection = "asc")
         {
             var produtos = await _produtoService.FindPagedSearch(name, page, pageSize, sortOrder, sortDirection);
-            if (produtos.ListObject == null) return NotFound();
             return CustomResponse(produtos);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProdutoViewModelEntrada produtoEntrada)
         {
-            if (produtoEntrada == null) return BadRequest();
+            if (!ModelState.IsValid) CustomResponse(ModelState);
             return CustomResponse(await _produtoService.Create(produtoEntrada));
         }
 
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] AtualizarProdutoViewModelEntrada atualizarProdutoEntrada)
         {
-            if (atualizarProdutoEntrada == null) return BadRequest();
+            if (!ModelState.IsValid) CustomResponse(ModelState);
             return CustomResponse(await _produtoService.Update(atualizarProdutoEntrada));
         }
 

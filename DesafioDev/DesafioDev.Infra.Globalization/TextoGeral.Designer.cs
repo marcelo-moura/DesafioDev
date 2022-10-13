@@ -77,5 +77,23 @@ namespace DesafioDev.Infra.Globalization {
                 return ResourceManager.GetString("NenhumRegistroEncontrado", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid user request!.
+        /// </summary>
+        public static string RequestInvalid {
+            get {
+                return ResourceManager.GetString("RequestInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usuário ou Senha inválidos. Tente novamente..
+        /// </summary>
+        public static string UsuarioSenhaInvalidos {
+            get {
+                return ResourceManager.GetString("UsuarioSenhaInvalidos", resourceCulture);
+            }
+        }
     }
 }
