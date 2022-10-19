@@ -33,7 +33,7 @@ namespace DesafioDev.WebAPI.v1.Controllers
         {
             var produto = await _produtoService.FindById(id);
             if (produto == null) return NotFound();
-            return Ok(produto);
+            return CustomResponse(produto);
         }
 
         [HttpGet("getByNome/{nome}")]
@@ -62,9 +62,9 @@ namespace DesafioDev.WebAPI.v1.Controllers
 
         [HttpGet("{page}/{pageSize}/{sortOrder}/{sortDirection}")]
         [TypeFilter(typeof(HyperMediaFilter))]
-        public async Task<IActionResult> GetPagedSearch([FromQuery] string name, int page = 1, int pageSize = 20, int sortOrder = 1, string sortDirection = "asc")
+        public async Task<IActionResult> GetPagedSearch([FromQuery] FiltroProdutoViewModelEntrada filtroProduto, int page = 1, int pageSize = 20, int sortOrder = 1, string sortDirection = "asc")
         {
-            var produtos = await _produtoService.FindPagedSearch(name, page, pageSize, sortOrder, sortDirection);
+            var produtos = await _produtoService.FindPagedSearch(filtroProduto, page, pageSize, sortOrder, sortDirection);
             return CustomResponse(produtos);
         }
 

@@ -42,5 +42,10 @@ namespace DesafioDev.Application.Services.Base
         {
             _notificador.Handle(new Notificacao(mensagem));
         }
+
+        protected int QuantidadeRegistrosParaDesconsiderar(int pagina, int registrosPorPagina)
+        {
+            return (pagina - 1) * registrosPorPagina;
+        }
     }
 }

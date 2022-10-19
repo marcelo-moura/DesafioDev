@@ -6,6 +6,7 @@ using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Models;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Utils;
+using DesafioDev.Infra.Common.Utils;
 using DesafioDev.Infra.Globalization;
 using DesafioDev.Infra.InterfacesRepository;
 
@@ -48,23 +49,25 @@ namespace DesafioDev.Application.Services
             return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Preco == preco));
         }
 
-        public async Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(string name, int page, int pageSize, int sortOrder, string sortDirection)
+        public async Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(FiltroProdutoViewModelEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection)
         {
             var produtos = await _produtoRepository.BuscarComPagedSearch("sp_ListarProdutos", sortOrder, sortDirection);
 
-            if (!string.IsNullOrEmpty(name))
-                produtos = produtos.Where(p => p.Nome.Contains(name)).ToList();
+            var predicate = Utils.MontarPredicateFiltro<Produto, FiltroProdutoViewModelEntrada>(filtroProduto);
+
+            if (predicate.IsStarted)
+                produtos = produtos.Where(predicate).ToList();
 
             if (!produtos.Any())
             {
                 Notificar(TextoGeral.NenhumRegistroEncontrado);
                 return new PagedSearchViewModel<ProdutoViewModelSaida>();
-            }            
-
+            }
+            
             return new PagedSearchViewModel<ProdutoViewModelSaida>
             {
                 CurrentPage = page,
-                ListObject = _mapper.Map<List<ProdutoViewModelSaida>>(produtos),
+                ListObject = _mapper.Map<List<ProdutoViewModelSaida>>(produtos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList()),
                 PageSize = pageSize,
                 SortDirections = sortDirection,
                 TotalResults = produtos.Count,

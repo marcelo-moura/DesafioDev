@@ -13,7 +13,7 @@ namespace DesafioDev.Application.Interfaces
         Task<IEnumerable<ProdutoViewModelSaida>> FindByNome(string nome);
         Task<IList<ProdutoViewModelSaida>> FindByCategoria(Guid? categoriaId);
         Task<IEnumerable<ProdutoViewModelSaida>> FindByPreco(decimal? preco);
-        Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(string name, int page, int pageSize, int sortOrder, string sortDirection);
+        Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(FiltroProdutoViewModelEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection);
         Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada);
         Task<Produto> Update(AtualizarProdutoViewModelEntrada atualizarProdutoEntrada);
         Task Delete(Guid id);
