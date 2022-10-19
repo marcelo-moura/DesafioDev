@@ -63,11 +63,11 @@ namespace DesafioDev.Application.Services
                 Notificar(TextoGeral.NenhumRegistroEncontrado);
                 return new PagedSearchViewModel<ProdutoViewModelSaida>();
             }
-
+            
             return new PagedSearchViewModel<ProdutoViewModelSaida>
             {
                 CurrentPage = page,
-                ListObject = _mapper.Map<List<ProdutoViewModelSaida>>(produtos),
+                ListObject = _mapper.Map<List<ProdutoViewModelSaida>>(produtos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList()),
                 PageSize = pageSize,
                 SortDirections = sortDirection,
                 TotalResults = produtos.Count,
