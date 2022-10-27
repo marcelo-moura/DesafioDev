@@ -2,6 +2,7 @@
 using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Models;
+using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Utils;
 
 namespace DesafioDev.Application.Interfaces
@@ -13,7 +14,7 @@ namespace DesafioDev.Application.Interfaces
         Task<IEnumerable<ProdutoViewModelSaida>> FindByNome(string nome);
         Task<IList<ProdutoViewModelSaida>> FindByCategoria(Guid? categoriaId);
         Task<IEnumerable<ProdutoViewModelSaida>> FindByPreco(decimal? preco);
-        Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(FiltroProdutoViewModelEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection);
+        Task<PagedSearchViewModel<TSaida>> FindPagedSearch<TSaida, TFiltroEntrada>(TFiltroEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection) where TSaida : ISupportsHyperMedia;
         Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada);
         Task<Produto> Update(AtualizarProdutoViewModelEntrada atualizarProdutoEntrada);
         Task Delete(Guid id);
