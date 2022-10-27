@@ -49,11 +49,11 @@ namespace DesafioDev.Application.Services
             return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Preco == preco));
         }
 
-        public async Task<PagedSearchViewModel<ProdutoViewModelSaida>> FindPagedSearch(FiltroProdutoViewModelEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection)
+        public async Task<PagedSearchViewModel<TSaida>> FindPagedSearch<TSaida, TFiltroEntrada>(TFiltroEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection) where TSaida : ISupportsHyperMedia
         {
             var produtos = await _produtoRepository.BuscarComPagedSearch("sp_ListarProdutos", sortOrder, sortDirection);
 
-            var predicate = Utils.MontarPredicateFiltro<Produto, FiltroProdutoViewModelEntrada>(filtroProduto);
+            var predicate = Utils.MontarPredicateFiltro<Produto, TFiltroEntrada>(filtroProduto);
 
             if (predicate.IsStarted)
                 produtos = produtos.Where(predicate).ToList();
@@ -61,13 +61,13 @@ namespace DesafioDev.Application.Services
             if (!produtos.Any())
             {
                 Notificar(TextoGeral.NenhumRegistroEncontrado);
-                return new PagedSearchViewModel<ProdutoViewModelSaida>();
+                return new PagedSearchViewModel<TSaida>();
             }
             
-            return new PagedSearchViewModel<ProdutoViewModelSaida>
+            return new PagedSearchViewModel<TSaida>
             {
                 CurrentPage = page,
-                ListObject = _mapper.Map<List<ProdutoViewModelSaida>>(produtos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList()),
+                ListObject = _mapper.Map<List<TSaida>>(produtos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList()),
                 PageSize = pageSize,
                 SortDirections = sortDirection,
                 TotalResults = produtos.Count,
