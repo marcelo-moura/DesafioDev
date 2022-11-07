@@ -55,7 +55,7 @@ namespace DesafioDev.Application.Services
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+                new Claim(JwtRegisteredClaimNames.Jti, usuario.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, usuario.NomeCompleto),
                 new Claim(JwtRegisteredClaimNames.Email, usuario.Login),
                 new Claim(JwtRegisteredClaimNames.Sub, usuario.Codigo)
