@@ -2,6 +2,7 @@ using DesafioDev.Application.AutoMapper.Mappings;
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.IoC;
 using DesafioDev.WebAPI.Configuration;
+using DesafioDev.WebAPI.Extensions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,8 @@ app.UseSwaggerConfiguration(apiVersionDescriptionProvider);
 var option = new RewriteOptions();
 option.AddRedirect("^$", "swagger");
 app.UseRewriter(option);
+
+app.ConfigureExceptionHandler(Log.Logger);
 
 app.UseEndpoints(endpoints =>
 {
