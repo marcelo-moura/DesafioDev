@@ -1,7 +1,7 @@
-﻿using DesafioDev.Business.Enums;
-using DesafioDev.Business.Models.Base;
+﻿using DesafioDev.PagamentoAPI.Enums;
+using DesafioDev.PagamentoAPI.Models.Base;
 
-namespace DesafioDev.Business.Models
+namespace DesafioDev.PagamentoAPI.Models
 {
     public class Transacao : EntityBase
     {

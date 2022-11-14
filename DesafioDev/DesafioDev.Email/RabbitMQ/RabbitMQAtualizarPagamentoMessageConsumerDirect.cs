@@ -56,7 +56,7 @@ namespace DesafioDev.Email.RabbitMQ
         {
             try
             {
-                var email = new EmailLog(message.Email, $"Pedido - {message.PedidoId} {message.StatusTransacao.GetDescription()}");
+                var email = new EmailLog(message.Email, $"Pedido - {message.PedidoId} - {message.StatusTransacao.GetDescription()}");
 
                 using (var scope = _service.CreateScope())
                 {

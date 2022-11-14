@@ -1,6 +1,6 @@
-﻿using DesafioDev.Business.Models.Base;
+﻿using DesafioDev.PagamentoAPI.Models.Base;
 
-namespace DesafioDev.Business.Models
+namespace DesafioDev.PagamentoAPI.Models
 {
     public class Pagamento : EntityBase
     {

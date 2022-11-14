@@ -6,7 +6,6 @@ using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Notificacoes;
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.Data.Repository;
-using DesafioDev.Infra.Integration;
 using DesafioDev.Infra.Integration.Interfaces;
 using DesafioDev.Infra.Integration.MercadoPago;
 using DesafioDev.Infra.Integration.MercadoPago.Interfaces;
@@ -31,7 +30,6 @@ namespace DesafioDev.Infra.IoC
             services.AddScoped<IProdutoService, ProdutoService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPedidoService, PedidoService>();
-            services.AddScoped<IPagamentoService, PagamentoService>();
             #endregion
 
             #region Register Repositories
@@ -39,7 +37,6 @@ namespace DesafioDev.Infra.IoC
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IPedidoRepository, PedidoRepository>();
             services.AddScoped<IPedidoItemRepository, PedidoItemRepository>();
-            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
             #endregion
 
             services.AddScoped<INotificador, Notificador>();
@@ -52,7 +49,6 @@ namespace DesafioDev.Infra.IoC
 
             #region Integrations Configuration            
             services.AddScoped<IMercadoPagoGateway, MercadoPagoGateway>();
-            services.AddScoped<IPagamentoCartaoCreditoFacade, PagamentoCartaoCreditoFacade>();
             services.AddScoped<IRabbitMQMessageSender, RabbitMQMessageSender>();
             services.AddScoped<IRabbitMQMessageConsumer, RabbitMQMessageConsumer>();
             #endregion            
