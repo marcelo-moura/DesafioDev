@@ -1,4 +1,6 @@
-﻿namespace DesafioDev.Email.Messages.IntegrationEvents
+﻿using DesafioDev.Core;
+
+namespace DesafioDev.Email.Messages.IntegrationEvents
 {
     public class PedidoIniciadoEvent : BaseMessage
     {

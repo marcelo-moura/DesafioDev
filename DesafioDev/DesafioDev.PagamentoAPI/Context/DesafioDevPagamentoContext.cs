@@ -1,14 +1,14 @@
-﻿using DesafioDev.Business.Models;
+﻿using DesafioDev.PagamentoAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DesafioDev.Infra.Data.Context
+namespace DesafioDev.PagamentoAPI.Context
 {
-    public class DesafioDevContext : DbContext
+    public class DesafioDevPagamentoContext : DbContext
     {
-        public DesafioDevContext()
+        public DesafioDevPagamentoContext()
         { }
 
-        public DesafioDevContext(DbContextOptions<DesafioDevContext> options) : base(options)
+        public DesafioDevPagamentoContext(DbContextOptions<DesafioDevPagamentoContext> options) : base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -17,7 +17,7 @@ namespace DesafioDev.Infra.Data.Context
                                      .SelectMany(e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
                 property.SetColumnType("varchar(100)");
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DesafioDevContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DesafioDevPagamentoContext).Assembly);
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
@@ -43,10 +43,7 @@ namespace DesafioDev.Infra.Data.Context
             return base.SaveChangesAsync(cancellationToken);
         }
 
-        public DbSet<Produto> Produtos { get; set; }
-        public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Pedido> Pedidos { get; set; }
-        public DbSet<PedidoItem> PedidoItems { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
+        public DbSet<Transacao> Transacoes { get; set; }
     }
 }

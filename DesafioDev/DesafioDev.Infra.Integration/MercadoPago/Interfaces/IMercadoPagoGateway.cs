@@ -9,7 +9,6 @@ namespace DesafioDev.Infra.Integration.MercadoPago.Interfaces
     {
         Task<Customer> ObterDadosCliente(string email);
         Task<Customer> CriarCliente(Usuario usuario);
-        Task<CustomerCard> CriarCartaoCliente(string token, string email);        
-        Task<Payment> CriarPagamento(Pagamento pagamento, List<PaymentItemRequest> paymentItems, Customer customer);
+        Task<CustomerCard> CriarCartaoCliente(string token, string email);
     }
 }

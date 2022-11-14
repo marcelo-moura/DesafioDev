@@ -1,8 +1,8 @@
-﻿using DesafioDev.Business.Models;
+﻿using DesafioDev.PagamentoAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace NerdStore.Pagamentos.Data.Mappings
+namespace DesafioDev.PagamentoAPI.Mappings
 {
     public class TransacaoConfig : IEntityTypeConfiguration<Transacao>
     {

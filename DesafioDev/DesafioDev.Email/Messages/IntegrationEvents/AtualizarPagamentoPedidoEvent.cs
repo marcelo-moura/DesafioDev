@@ -1,4 +1,5 @@
-﻿using DesafioDev.Email.Enums;
+﻿using DesafioDev.Core;
+using DesafioDev.Email.Enums;
 
 namespace DesafioDev.Email.Messages.IntegrationEvents
 {

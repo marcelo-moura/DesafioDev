@@ -1,13 +1,11 @@
-﻿using DesafioDev.Business.Enums;
-using DesafioDev.Business.Models;
-using DesafioDev.Core.Messages.IntegrationEvents;
-using DesafioDev.Infra.Integration.Interfaces;
-using DesafioDev.Infra.Integration.MercadoPago.Interfaces;
+﻿using DesafioDev.PagamentoAPI.Enums;
+using DesafioDev.PagamentoAPI.Integration.Interfaces;
+using DesafioDev.PagamentoAPI.Integration.MercadoPago.Interfaces;
+using DesafioDev.PagamentoAPI.Messages.IntegrationEvents;
+using DesafioDev.PagamentoAPI.Models;
 using MercadoPago.Client.Payment;
-using Microsoft.Extensions.Configuration;
-using NerdStore.Core.DomainObjects.DTO;
 
-namespace DesafioDev.Infra.Integration
+namespace DesafioDev.PagamentoAPI.Integration
 {
     public class PagamentoCartaoCreditoFacade : IPagamentoCartaoCreditoFacade
     {
@@ -20,7 +18,7 @@ namespace DesafioDev.Infra.Integration
             _configuration = configuration;
         }
 
-        public async Task<Transacao> RealizarPagamento(PedidoIniciadoReceive pedido, Pagamento pagamento)
+        public async Task<Transacao> RealizarPagamento(PedidoIniciadoEvent pedido, Pagamento pagamento)
         {
             var paymentItems = PreencherPaymentItemsRequest(pedido.ProdutosPedido);
 

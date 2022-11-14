@@ -2,10 +2,8 @@
 using DesafioDev.Infra.Integration.MercadoPago.Interfaces;
 using MercadoPago.Client;
 using MercadoPago.Client.Customer;
-using MercadoPago.Client.Payment;
 using MercadoPago.Config;
 using MercadoPago.Resource.Customer;
-using MercadoPago.Resource.Payment;
 using Microsoft.Extensions.Configuration;
 
 namespace DesafioDev.Infra.Integration.MercadoPago
@@ -71,36 +69,6 @@ namespace DesafioDev.Infra.Integration.MercadoPago
             }
 
             return card;
-        }
-
-        public async Task<Payment> CriarPagamento(Pagamento pagamento, List<PaymentItemRequest> paymentItems, Customer customer)
-        {
-            var paymentRequest = new PaymentCreateRequest
-            {
-                AdditionalInfo = new PaymentAdditionalInfoRequest
-                {
-                    Items = paymentItems,
-                    Payer = new PaymentAdditionalInfoPayerRequest
-                    {
-                        FirstName = customer.FirstName,
-                        LastName = customer.LastName
-                    }
-                },
-                TransactionAmount = pagamento.Valor,
-                Token = pagamento.TokenCard,
-                Installments = pagamento.Parcelas,
-                PaymentMethodId = pagamento.PaymentMethodId,
-                Payer = new PaymentPayerRequest
-                {
-                    Email = customer.Email,
-                    Type = "customer"
-                }
-            };
-
-            var client = new PaymentClient();
-            Payment payment = await client.CreateAsync(paymentRequest);
-
-            return payment;
         }
     }
 }

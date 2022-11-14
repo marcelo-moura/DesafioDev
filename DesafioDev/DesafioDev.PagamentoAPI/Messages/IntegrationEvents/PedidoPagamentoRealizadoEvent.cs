@@ -1,4 +1,6 @@
-﻿namespace DesafioDev.Core.Messages.IntegrationEvents
+﻿using DesafioDev.Core;
+
+namespace DesafioDev.PagamentoAPI.Messages.IntegrationEvents
 {
     public class PedidoPagamentoRealizadoEvent : BaseMessage
     {
