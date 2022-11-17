@@ -1,6 +1,6 @@
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='sp_ListarProdutos' and xtype='P')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='sp_ListarProdutosVitrine' and xtype='P')
 	BEGIN
-		EXEC('CREATE PROCEDURE [dbo].[sp_ListarProdutos]	
+		EXEC('CREATE PROCEDURE [dbo].[sp_ListarProdutosVitrine]	
 				@SortOrder int,
 				@SortDirection varchar(10)
 				AS
@@ -27,7 +27,7 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='sp_ListarProdutos' and xtype
 					p.CategoriaId,
 					c.Nome as NomeCategoria
 				FROM Produto p
-				LEFT JOIN Categoria c
+				JOIN Categoria c
 				ON c.Id = p.CategoriaId
 
 				ORDER BY 

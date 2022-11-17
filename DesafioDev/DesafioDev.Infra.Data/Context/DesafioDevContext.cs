@@ -1,4 +1,5 @@
 ﻿using DesafioDev.Business.Models;
+using DesafioDev.Business.Models.Custom;
 using Microsoft.EntityFrameworkCore;
 
 namespace DesafioDev.Infra.Data.Context
@@ -48,5 +49,7 @@ namespace DesafioDev.Infra.Data.Context
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoItem> PedidoItems { get; set; }
+
+        public DbSet<ResultadoConsultaProduto> ResultadoConsultaProduto { get; set; }
     }
 }
