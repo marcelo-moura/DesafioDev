@@ -43,7 +43,7 @@ namespace DesafioDev.WebAPI.Controllers.Base
             return BadRequest(new
             {
                 success = false,
-                erros = _notificador.ObterNotificacoes().Select(n => n.Mensagem),
+                errors = _notificador.ObterNotificacoes().Select(n => n.Mensagem),
                 detail = result
             });
         }

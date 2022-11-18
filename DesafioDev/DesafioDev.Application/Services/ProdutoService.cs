@@ -4,6 +4,7 @@ using DesafioDev.Application.Services.Base;
 using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Application.ViewModels.Saida;
 using DesafioDev.Business.Models;
+using DesafioDev.Business.Models.Custom;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.Core.Utils;
 using DesafioDev.Infra.Common.Utils;
@@ -49,28 +50,30 @@ namespace DesafioDev.Application.Services
             return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Preco == preco));
         }
 
-        public async Task<PagedSearchViewModel<TSaida>> FindPagedSearch<TSaida, TFiltroEntrada>(TFiltroEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection) where TSaida : ISupportsHyperMedia
+        public async Task<PagedSearchViewModel<TSaida>> FindPagedSearch<TSaida, TFiltroEntrada>(TFiltroEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection, string nameProcedure) where TSaida : ISupportsHyperMedia
         {
-            var produtos = await _produtoRepository.BuscarComPagedSearch("sp_ListarProdutos", sortOrder, sortDirection);
+            var produtos = await _produtoRepository.BuscarComPagedSearch<ResultadoConsultaProduto>(nameProcedure, sortOrder, sortDirection);
 
-            var predicate = Utils.MontarPredicateFiltro<Produto, TFiltroEntrada>(filtroProduto);
+            var listaProdutos = _mapper.Map<List<TSaida>>(produtos);
+
+            var predicate = Utils.MontarPredicateFiltro<TSaida, TFiltroEntrada>(filtroProduto);
 
             if (predicate.IsStarted)
-                produtos = produtos.Where(predicate).ToList();
+                listaProdutos = listaProdutos.Where(predicate).ToList();
 
-            if (!produtos.Any())
+            if (!listaProdutos.Any())
             {
                 Notificar(TextoGeral.NenhumRegistroEncontrado);
-                return new PagedSearchViewModel<TSaida>();
+                return null;
             }
             
             return new PagedSearchViewModel<TSaida>
             {
                 CurrentPage = page,
-                ListObject = _mapper.Map<List<TSaida>>(produtos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList()),
+                ListObject = listaProdutos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList(),
                 PageSize = pageSize,
                 SortDirections = sortDirection,
-                TotalResults = produtos.Count,
+                TotalResults = listaProdutos.Count,
             };
         }
 

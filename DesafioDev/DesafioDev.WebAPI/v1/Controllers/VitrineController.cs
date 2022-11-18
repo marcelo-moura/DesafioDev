@@ -33,7 +33,7 @@ namespace DesafioDev.WebAPI.v1.Controllers
         [TypeFilter(typeof(HyperMediaFilter))]
         public async Task<IActionResult> GetPagedSearch([FromQuery] FiltroProdutoViewModelEntrada filtroProduto, int page = 1, int pageSize = 20, int sortOrder = 1, string sortDirection = "asc")
         {
-            var produtos = await _produtoService.FindPagedSearch<VitrineProdutoViewModelSaida, FiltroProdutoViewModelEntrada>(filtroProduto, page, pageSize, sortOrder, sortDirection);
+            var produtos = await _produtoService.FindPagedSearch<VitrineProdutoViewModelSaida, FiltroProdutoViewModelEntrada>(filtroProduto, page, pageSize, sortOrder, sortDirection, "sp_ListarProdutosVitrine");
             return CustomResponse(produtos);
         }                
     }

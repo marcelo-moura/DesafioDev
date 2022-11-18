@@ -14,7 +14,7 @@ namespace DesafioDev.Application.Interfaces
         Task<IEnumerable<ProdutoViewModelSaida>> FindByNome(string nome);
         Task<IList<ProdutoViewModelSaida>> FindByCategoria(Guid? categoriaId);
         Task<IEnumerable<ProdutoViewModelSaida>> FindByPreco(decimal? preco);
-        Task<PagedSearchViewModel<TSaida>> FindPagedSearch<TSaida, TFiltroEntrada>(TFiltroEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection) where TSaida : ISupportsHyperMedia;
+        Task<PagedSearchViewModel<TSaida>> FindPagedSearch<TSaida, TFiltroEntrada>(TFiltroEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection, string nameProcedure = "") where TSaida : ISupportsHyperMedia;
         Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada);
         Task<Produto> Update(AtualizarProdutoViewModelEntrada atualizarProdutoEntrada);
         Task Delete(Guid id);
