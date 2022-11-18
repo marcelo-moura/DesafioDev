@@ -2,7 +2,6 @@
 using DesafioDev.Infra.Data.Context;
 using DesafioDev.Infra.Data.Repository.Base;
 using DesafioDev.Infra.InterfacesRepository;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DesafioDev.Infra.Data.Repository

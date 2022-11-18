@@ -73,7 +73,7 @@ namespace DesafioDev.Application.Services
                 ListObject = listaProdutos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList(),
                 PageSize = pageSize,
                 SortDirections = sortDirection,
-                TotalResults = produtos.Count,
+                TotalResults = listaProdutos.Count,
             };
         }
 
