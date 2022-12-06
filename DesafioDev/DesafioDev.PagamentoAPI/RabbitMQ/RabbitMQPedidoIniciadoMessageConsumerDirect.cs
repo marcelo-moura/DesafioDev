@@ -17,11 +17,10 @@ namespace DesafioDev.PagamentoAPI.RabbitMQ
         private IConnection _connection;
         private IModel _channel;
         private const string ExchangeName = "DirectIniciarPedidoExchange";
-        private const string IniciarPedidoEmailQueueName = "iniciar-pedido-queue";
-        private const string IniciarPedidoEmailRoutingKey = "IniciarPedido";
+        private const string IniciarPedidoQueueName = "iniciar-pedido-queue";
+        private const string IniciarPedidoRoutingKey = "IniciarPedido";
 
-        public RabbitMQPedidoIniciadoMessageConsumerDirect(IServiceProvider service,
-                                                           IConfiguration configuration)
+        public RabbitMQPedidoIniciadoMessageConsumerDirect(IServiceProvider service, IConfiguration configuration)
         {
             _service = service;
             var factory = new ConnectionFactory
@@ -34,8 +33,8 @@ namespace DesafioDev.PagamentoAPI.RabbitMQ
             _channel = _connection.CreateModel();
 
             _channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct);
-            _channel.QueueDeclare(IniciarPedidoEmailQueueName, false, false, false, null);
-            _channel.QueueBind(IniciarPedidoEmailQueueName, ExchangeName, IniciarPedidoEmailRoutingKey);
+            _channel.QueueDeclare(IniciarPedidoQueueName, false, false, false, null);
+            _channel.QueueBind(IniciarPedidoQueueName, ExchangeName, IniciarPedidoRoutingKey);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -51,7 +50,7 @@ namespace DesafioDev.PagamentoAPI.RabbitMQ
                 ProcessarPagamento(message).GetAwaiter().GetResult();
                 _channel.BasicAck(evt.DeliveryTag, false);
             };
-            _channel.BasicConsume(IniciarPedidoEmailQueueName, true, consumer);
+            _channel.BasicConsume(IniciarPedidoQueueName, true, consumer);
             return Task.CompletedTask;
         }
 
