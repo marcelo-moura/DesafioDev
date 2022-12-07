@@ -14,7 +14,7 @@ namespace DesafioDev.Infra.Integration.RabbitMQ
         {
         }
 
-        public async Task<string> ReceiveMessage(string queueName)
+        public string ReceiveMessage(string queueName)
         {
             string content = string.Empty;
 
@@ -32,10 +32,10 @@ namespace DesafioDev.Infra.Integration.RabbitMQ
                 };
                 _channel.BasicConsume(queueName, true, consumer);
             }
-            return await Task.FromResult(content);
+            return content;
         }
 
-        public async Task<string> ReceiveExchangeMessage(string exchangeName)
+        public string ReceiveExchangeMessage(string exchangeName)
         {
             string content = string.Empty;
 
@@ -57,7 +57,7 @@ namespace DesafioDev.Infra.Integration.RabbitMQ
                 };
                 _channel.BasicConsume(queueName, true, consumer);
             }
-            return await Task.FromResult(content);
+            return content;
         }
     }
 }

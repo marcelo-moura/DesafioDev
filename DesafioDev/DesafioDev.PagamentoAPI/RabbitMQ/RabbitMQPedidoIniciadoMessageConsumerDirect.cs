@@ -74,9 +74,7 @@ namespace DesafioDev.PagamentoAPI.RabbitMQ
                     var queueNameRoutingKey = new Dictionary<string, string>();
                     queueNameRoutingKey.Add("atualizar-pagamento-email-queue", "AtualizarPagamentoEmail");
 
-                    var pagamentoRealizadoMessage = new PedidoPagamentoRealizadoEvent(pedidoMessage.PedidoId, pedidoMessage.ClienteId, pedidoMessage.ClienteLogin,
-                                                                                      transacao.PagamentoId, transacao.Id,
-                                                                                      (int)transacao.StatusTransacao, transacao.Total);
+                    var pagamentoRealizadoMessage = PreencherDadosPedidoPagamentoRealizado(pedidoMessage, transacao);
 
                     using (var scope = _service.CreateScope())
                     {
@@ -98,10 +96,17 @@ namespace DesafioDev.PagamentoAPI.RabbitMQ
             }
         }
 
-        private Pagamento PreencherDadosPagamentoRequest(PedidoIniciadoEvent? pedido)
+        private Pagamento PreencherDadosPagamentoRequest(PedidoIniciadoEvent pedido)
         {
             return new Pagamento(pedido.PedidoId, pedido.Total, pedido.Parcelas, pedido.NomeCartao,
                                  pedido.NumeroCartao, pedido.ExpiracaoCartao, pedido.CvvCartao);
+        }
+
+        private PedidoPagamentoRealizadoEvent PreencherDadosPedidoPagamentoRealizado(PedidoIniciadoEvent pedidoMessage, Transacao transacao)
+        {
+            return new PedidoPagamentoRealizadoEvent(pedidoMessage.PedidoId, pedidoMessage.ClienteId, pedidoMessage.ClienteLogin,
+                                                     transacao.PagamentoId, transacao.Id, 
+                                                     (int)transacao.StatusTransacao, transacao.Total);
         }
     }
 }
