@@ -48,34 +48,7 @@ namespace DesafioDev.Application.Services
         public async Task<IEnumerable<ProdutoViewModelSaida>> FindByPreco(decimal? preco)
         {
             return _mapper.Map<IEnumerable<ProdutoViewModelSaida>>(await _produtoRepository.Buscar(p => p.Preco == preco));
-        }
-
-        public async Task<PagedSearchViewModel<TSaida>> FindPagedSearch<TSaida, TFiltroEntrada>(TFiltroEntrada filtroProduto, int page, int pageSize, int sortOrder, string sortDirection, string nameProcedure) where TSaida : ISupportsHyperMedia
-        {
-            var produtos = await _produtoRepository.BuscarComPagedSearch<ResultadoConsultaProduto>(nameProcedure, sortOrder, sortDirection);
-
-            var listaProdutos = _mapper.Map<List<TSaida>>(produtos);
-
-            var predicate = Utils.MontarPredicateFiltro<TSaida, TFiltroEntrada>(filtroProduto);
-
-            if (predicate.IsStarted)
-                listaProdutos = listaProdutos.Where(predicate).ToList();
-
-            if (!listaProdutos.Any())
-            {
-                Notificar(TextoGeral.NenhumRegistroEncontrado);
-                return null;
-            }
-            
-            return new PagedSearchViewModel<TSaida>
-            {
-                CurrentPage = page,
-                ListObject = listaProdutos.Skip(QuantidadeRegistrosParaDesconsiderar(page, pageSize)).Take(pageSize).ToList(),
-                PageSize = pageSize,
-                SortDirections = sortDirection,
-                TotalResults = listaProdutos.Count,
-            };
-        }
+        }        
 
         public async Task<Produto> Create(ProdutoViewModelEntrada produtoEntrada)
         {
