@@ -1,6 +1,7 @@
 ﻿using DesafioDev.Application.Interfaces;
 using DesafioDev.Application.ViewModels.Entrada;
 using DesafioDev.Application.ViewModels.Saida;
+using DesafioDev.Business.Models.Custom;
 using DesafioDev.Core.Hypermedia.Filters;
 using DesafioDev.Core.Interfaces;
 using DesafioDev.WebAPI.Controllers.Base;
@@ -33,7 +34,8 @@ namespace DesafioDev.WebAPI.v1.Controllers
         [TypeFilter(typeof(HyperMediaFilter))]
         public async Task<IActionResult> GetPagedSearch([FromQuery] FiltroProdutoViewModelEntrada filtroProduto, int page = 1, int pageSize = 20, int sortOrder = 1, string sortDirection = "asc")
         {
-            var produtos = await _produtoService.FindPagedSearch<VitrineProdutoViewModelSaida, FiltroProdutoViewModelEntrada>(filtroProduto, page, pageSize, sortOrder, sortDirection, "sp_ListarProdutosVitrine");
+            var produtos = await _produtoService.FindPagedSearch<VitrineProdutoViewModelSaida, FiltroProdutoViewModelEntrada, ResultadoConsultaProduto>
+                (filtroProduto, page, pageSize, sortOrder, sortDirection, "sp_ListarProdutosVitrine");
             return CustomResponse(produtos);
         }                
     }
